@@ -1,0 +1,44 @@
+SaaS Template License
+
+Copyright (c) 2025 Chris Gregori
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to use
+the Software for the purpose of creating and developing their own Software as
+a Service (SaaS) applications, subject to the following conditions:
+
+PERMITTED USES:
+1. Use the Software as a foundation for building your own SaaS applications
+2. Modify, adapt, and customize the Software for your specific business needs
+3. Deploy applications built using the Software for commercial purposes
+4. Study the code for educational purposes
+
+RESTRICTIONS:
+1. You may NOT redistribute, sell, license, or sublicense the Software itself
+   (whether modified or unmodified) as a template, starter kit, boilerplate,
+   or similar product
+2. You may NOT offer the Software as a service, template, or development tool
+   to third parties
+3. You may NOT create derivative templates or starter kits based on this
+   Software for distribution or sale
+4. Any SaaS application built using this Software must be substantially
+   different from the original template and provide meaningful business value
+   beyond the template functionality
+
+ATTRIBUTION:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software used in derivative works.
+
+DISCLAIMER:
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+ENFORCEMENT:
+Violation of these terms will result in immediate termination of your license
+to use the Software. The copyright holder reserves the right to seek legal
+remedies for unauthorized use or distribution.

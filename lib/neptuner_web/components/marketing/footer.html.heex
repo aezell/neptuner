@@ -1,0 +1,100 @@
+<footer class="border-t border-base-300 border-dashed">
+  <div class="mx-auto  2xl:max-w-6xl 2xl:px-12 w-full  max-w-5xl border-x border-base-300 border-dashed px-4 py-12">
+    <div class="xl:grid xl:grid-cols-3 xl:gap-8">
+      <div class="text-base-content flex flex-col justify-between">
+        <div class="flex flex-col gap-2">
+          <a href="/" class="flex items-center font-serif text-lg gap-2 text-base-content">
+            <span class="sr-only">Go to homepage</span>
+            <.product_logo />
+            {Application.get_env(:neptuner, :app_name)}
+          </a>
+          <p class="mt-1 text-sm font-normal text-base-500 text-balance">
+            Premium file storage for teams and individuals
+          </p>
+        </div>
+        <p class="mt-1 text-xs font-normal text-base-500 text-balance">
+          © {Date.utc_today().year} {Application.get_env(:neptuner, :app_name)}. All rights reserved.
+        </p>
+      </div>
+      <div class="md:grid md:grid-cols-2 xl:grid-cols-4 md:gap-8 xl:col-span-2">
+        <div class="mt-12 md:mt-0">
+          <h3 class="text-base-content font-display">Learn</h3>
+          <ul role="list" class="mt-4 text-sm space-y-2 text-base-500">
+            <li>
+              <a
+                title="Button to your page"
+                aria-label="your label"
+                href="/changelog"
+                class="hover:text-base-content"
+              >
+                Documentation
+              </a>
+            </li>
+            <li>
+              <a
+                title="Button to your page"
+                aria-label="your label"
+                href="/blog"
+                class="hover:text-base-content"
+              >
+                About
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="mt-12 md:mt-0">
+          <h3 class="text-base-content font-display">Stay updated</h3>
+          <ul role="list" class="mt-4 text-sm space-y-2 text-base-500">
+            <li>
+              <a
+                title="Button to your page"
+                aria-label="your label"
+                href="/changelog"
+                class="hover:text-base-content"
+              >
+                Changelog
+              </a>
+            </li>
+            <li>
+              <a
+                title="Button to your page"
+                aria-label="your label"
+                href="/blog"
+                class="hover:text-base-content"
+              >
+                Blog
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="mt-12 md:mt-0">
+          <h3 class="text-base-content font-display">Policies</h3>
+          <ul role="list" class="mt-4 text-sm space-y-2 text-base-500">
+            <li>
+              <.link
+                aria-label="Terms and agreements"
+                navigate="/terms"
+                class="hover:text-base-content"
+              >
+                Terms of Service
+              </.link>
+            </li>
+            <li>
+              <.link
+                aria-label="Privacy Policy"
+                navigate="/privacy "
+                class="hover:text-base-content"
+              >
+                Privacy Policy
+              </.link>
+            </li>
+          </ul>
+        </div>
+        <div class="mt-12 md:mt-0">
+          <h3 class="text-base-content font-display">Socials</h3>
+          <.socials />
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

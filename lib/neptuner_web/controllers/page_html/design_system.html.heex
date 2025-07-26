@@ -1,0 +1,159 @@
+<main class="mx-auto max-w-3xl px-4 py-8">
+  <div class="flex justify-end">
+    <Layouts.theme_toggle />
+  </div>
+  <.header>
+    Design System
+    <:subtitle>
+      Complete showcase of all core components with updated styling that matches the homepage design patterns.
+
+      This is also an example of the .header and subtitle components.
+    </:subtitle>
+  </.header>
+
+  <div class="space-y-8">
+    
+<!-- Buttons -->
+    <section class="space-y-4">
+      <h2 class="text-lg font-medium">Buttons</h2>
+      <div class="flex flex-wrap gap-4">
+        <.button>Default Button</.button>
+        <.button variant="primary">Primary Button</.button>
+        <.button navigate="/dev/design-system">Navigate Button</.button>
+        <.button href="#" variant="primary">Link Button</.button>
+      </div>
+    </section>
+    
+<!-- Form Inputs -->
+    <section class="space-y-4">
+      <h2 class="text-lg font-medium">Form Inputs</h2>
+      <div class="space-y-4 max-w-md">
+        <.input
+          type="text"
+          name="text_input"
+          label="Text Input"
+          value=""
+          placeholder="Enter text here..."
+        />
+        <.input
+          type="email"
+          name="email_input"
+          label="Email Input"
+          value=""
+          placeholder="user@example.com"
+        />
+        <.input type="password" name="password_input" label="Password Input" value="" />
+        <.input
+          type="select"
+          name="select_input"
+          label="Select Input"
+          value=""
+          options={[{"Option 1", "1"}, {"Option 2", "2"}, {"Option 3", "3"}]}
+        />
+        <.input
+          type="textarea"
+          name="textarea_input"
+          label="Textarea Input"
+          value=""
+          placeholder="Enter longer text here..."
+        />
+        <.input type="checkbox" name="checkbox_input" label="Checkbox Input" value="false" />
+      </div>
+    </section>
+    
+<!-- Table -->
+    <section class="space-y-4">
+      <h2 class="text-lg font-medium">Table</h2>
+      <.table
+        id="demo-table"
+        rows={[
+          %{id: 1, name: "John Doe", email: "john@example.com", role: "Admin"},
+          %{id: 2, name: "Jane Smith", email: "jane@example.com", role: "User"},
+          %{id: 3, name: "Bob Johnson", email: "bob@example.com", role: "Editor"}
+        ]}
+      >
+        <:col :let={user} label="ID">{user.id}</:col>
+        <:col :let={user} label="Name">{user.name}</:col>
+        <:col :let={user} label="Email">{user.email}</:col>
+        <:col :let={user} label="Role">{user.role}</:col>
+        <:action :let={user}>
+          <.button variant="primary">Edit {user.name}</.button>
+        </:action>
+      </.table>
+    </section>
+    
+<!-- Data List -->
+    <section class="space-y-4">
+      <h2 class="text-lg font-medium">Data List</h2>
+      <.list>
+        <:item title="User Count">1,234 active users</:item>
+        <:item title="Revenue">$12,345 this month</:item>
+        <:item title="Growth Rate">+23% from last month</:item>
+        <:item title="Status">All systems operational</:item>
+      </.list>
+    </section>
+    
+<!-- Icons -->
+    <section class="space-y-4">
+      <h2 class="text-lg font-medium">Icons</h2>
+      <div class="flex flex-wrap gap-4 items-center">
+        <.icon name="hero-home" class="size-6" />
+        <.icon name="hero-user" class="size-6" />
+        <.icon name="hero-cog-6-tooth" class="size-6" />
+        <.icon name="hero-envelope" class="size-6" />
+        <.icon name="hero-heart" class="size-6" />
+        <.icon name="hero-star-solid" class="size-6" />
+        <.icon name="hero-check-circle-solid" class="size-6 text-success" />
+        <.icon name="hero-exclamation-triangle-solid" class="size-6 text-warning" />
+        <.icon name="hero-x-circle-solid" class="size-6 text-error" />
+      </div>
+    </section>
+    
+<!-- Card -->
+    <section class="space-y-4">
+      <h2 class="text-lg font-medium">Cards</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <.card
+          title="John Doe"
+          subheading="Software Engineer"
+          body="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore."
+          image="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face"
+        />
+        <.card
+          title="Jane Smith"
+          subheading="Product Manager"
+          body="Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo."
+        />
+        <.card
+          title="Bob Johnson"
+          subheading="Designer"
+          body="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+          image="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face"
+        />
+      </div>
+    </section>
+    
+<!-- Marquee -->
+    <section class="space-y-4">
+      <h2 class="text-lg font-medium">Marquee</h2>
+      <.marquee class="bg-base-100 rounded-lg p-4">
+        <div class="flex items-center gap-4">
+          <.icon name="hero-star-solid" class="size-6 text-warning" />
+          <span class="font-medium">Feature Update</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <.icon name="hero-check-circle-solid" class="size-6 text-success" />
+          <span class="font-medium">Bug Fixed</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <.icon name="hero-rocket-launch-solid" class="size-6 text-info" />
+          <span class="font-medium">New Release</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <.icon name="hero-heart-solid" class="size-6 text-error" />
+          <span class="font-medium">Community Love</span>
+        </div>
+      </.marquee>
+    </section>
+  </div>
+</main>

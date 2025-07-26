@@ -1,0 +1,53 @@
+<section>
+  <div class="mx-auto 2xl:max-w-6xl 2xl:px-12 w-full  max-w-5xl border-x border-base-300 border-dashed px-4 pb-4 border-t">
+    <div class="text-balance">
+      <h2 class="text-lg mt-12 sm:text-xl md:text-2xl lg:text-3xl font-serif font-medium tracking-tight text-base-content">
+        Our Customers
+      </h2>
+      <div class="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-background py-8">
+        <.marquee repeat={5} vertical={false} pause_on_hover={true} reverse={true}>
+          <.card
+            image="https://picsum.photos/64"
+            title="Jack"
+            subheading="@faketwitter"
+            body="This is so cool."
+          />
+          <.card
+            image="https://picsum.photos/64"
+            title="Chris"
+            subheading="@codestirring"
+            body="Whoa, it's like shadcn for Elixir and Phoenix!"
+          />
+          <.card
+            image="https://picsum.photos/64"
+            title="Rhiannon"
+            subheading="@rhiality"
+            body="Just run mix bloom.install card"
+          />
+        </.marquee>
+        <.marquee repeat={5} vertical={false} pause_on_hover={true} reverse={false}>
+          <.card
+            image="https://picsum.photos/64"
+            title="Penny"
+            subheading="@widmore4eva"
+            body="I love that I can customise each component 🤩"
+          />
+          <.card
+            image="https://picsum.photos/64"
+            title="Desmond"
+            subheading="@hatchlover"
+            body="This will save me so much time!"
+          />
+          <.card
+            image="https://picsum.photos/64"
+            title="Ben Linus"
+            subheading="@jacob_fan_23"
+            body="Open source so anyone can use it for free!"
+          />
+        </.marquee>
+        <div class="absolute inset-0 w-full bg-linear-45 from-background via-transparent to-background">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,29 @@
+<LiveToast.toast_group
+  flash={@flash}
+  connected={assigns[:socket] != nil}
+  toasts_sync={assigns[:toasts_sync]}
+/>
+
+<.nav current_scope={@current_scope} />
+
+<main class="grow">
+  <.hero />
+
+  <.company_logos />
+
+  <.features />
+
+  <.features_detailed />
+
+  <.big_cta />
+
+  <.pricing />
+
+  <.testimonials />
+
+  <.case_study />
+
+  <.company_logos />
+</main>
+
+<.footer />

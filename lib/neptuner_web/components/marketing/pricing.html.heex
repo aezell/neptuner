@@ -1,0 +1,578 @@
+<section
+  id="pricing-section"
+  class="border-t border-base-300 border-dashed border-dashed scroll-mt-24"
+>
+  <div class="mx-auto  2xl:max-w-6xl 2xl:px-12 w-full  max-w-5xl border-x border-base-300 border-dashed px-4 pt-12 pb-4">
+    <div class="text-center text-balance">
+      <h2 class="text-2xl  sm:text-2xl md:text-3xl lg:text-4xl font-serif font-medium tracking-tight text-base-content">
+        Plans that grow with you and your team
+      </h2>
+      <p class="text-base max-w-xl mx-auto mt-4 text-base-500">
+        Start free. Pay when your side project accidentally turns into a
+        business.
+      </p>
+      <!-- Pricing Toggle -->
+      <div
+        aria-labelledby="pricing-toggle"
+        class="relative z-0 inline-flex justify-center p-1 mx-auto mt-8 overflow-hidden bg-background shadow ring-1 ring-base-200 ring-offset-2 gap-4 lg:mx-0 rounded-md w-fit"
+      >
+        <div
+          id="toggle-slider"
+          class="absolute inset-0 w-1/2 bg-base-50 rounded-md transition-transform duration-200 ease-in-out"
+          style="transform: translateX(0px);"
+        >
+        </div>
+
+        <button
+          id="monthly-btn"
+          class="relative z-10 flex items-center justify-center w-full h-6 px-2 text-xs font-medium focus:outline-none transition-colors duration-300 text-base-600"
+          type="button"
+          aria-pressed="true"
+        >
+          Monthly
+        </button>
+
+        <button
+          id="annual-btn"
+          class="relative z-10 flex items-center justify-center w-full h-6 px-2 text-xs font-medium focus:outline-none transition-colors duration-300 focus:text-base-content hover:text-base-content"
+          type="button"
+          aria-pressed="false"
+        >
+          Annual
+        </button>
+      </div>
+    </div>
+    <div class="mt-12 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div class="flex flex-col h-full justify-between p-4 rounded-xl bg-base-200">
+        <div class="flex flex-col">
+          <h3 class="text-base font-medium text-base-content text-base-content">Pro</h3>
+          <p class="text-lg  sm:text-xl md:text-2xl lg:text-3xl font-medium flex items-baseline tracking-tighter mt-2 font-serif text-base-content">
+            <span class="pricing-amount" data-monthly="$29.00" data-annual="$19.00">$29.00</span>
+            <span class="text-sm font-normal tracking-normal text-base-500">
+              <span class="monthly-text" style="display: inline;">/month</span>
+              <span class="annual-text" style="display: none;">
+                /annually
+              </span>
+            </span>
+          </p>
+          <p class="text-sm  mt-2 text-base-500">For solo devs who just want their files to
+            work (without rage-quitting)</p>
+          <div class="mt-4 pt-4 border-t border-base-200  ">
+            <p class="text-xs  font-medium uppercase text-base-content">Core plan includes:</p>
+            <ul class="flex flex-col mt-4 text-sm  gap-y-3 text-base-content" role="list">
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>10,000 files/mo</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>1 custom domain</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Basic analytics (open &amp; click)</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>API access, no SDK required</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Developer-friendly docs</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Basic support (yes, from humans)</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Markdown, HTML, and MJML</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="w-full mt-8 flex justify-center">
+          <.button variant="primary">Get Started</.button>
+        </div>
+      </div>
+      <div class=" flex flex-col h-full justify-between p-4 rounded-xl bg-base-200">
+        <div class="flex flex-col">
+          <h3 class="text-base  font-medium text-base-content text-base-content">Scale</h3>
+          <p class="text-lg  sm:text-xl md:text-2xl lg:text-3xl font-medium flex items-baseline tracking-tighter mt-2 font-serif text-base-content">
+            <span class="pricing-amount" data-monthly="$49.00" data-annual="$39.00">$49.00</span>
+            <span class="text-sm font-normal tracking-normal text-base-500">
+              <span class="monthly-text" style="display: inline;">/month</span>
+              <span class="annual-text" style="display: none;">
+                /annually
+              </span>
+            </span>
+          </p>
+          <p class="text-sm  mt-2 text-base-500">For teams tired of storage platforms
+            that require PhDs to use</p>
+          <div class="mt-4 pt-4 border-t border-base-200  ">
+            <p class="text-xs  font-medium uppercase text-base-500">Core plan includes:</p>
+            <ul class="flex flex-col mt-4 text-sm  gap-y-3 text-base-content" role="list">
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>50,000 files/mo</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Multiple custom domains</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Custom DKIM &amp; SPF</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Webhook support </span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Inbox previews (even Outlook )</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Email templating engine</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Click, open, and bounce tracking</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Team access + roles</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Light automation workflows</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Chat support</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="w-full mt-8 flex justify-center">
+          <.button variant="primary">Get Started</.button>
+        </div>
+      </div>
+      <div class="flex flex-col h-full justify-between p-4 rounded-xl bg-base-200">
+        <div class="flex flex-col">
+          <h3 class="text-base  font-medium text-base-content text-base-content">Enterprise</h3>
+          <p class="text-lg  sm:text-xl md:text-2xl lg:text-3xl font-medium flex items-baseline tracking-tighter mt-2 font-serif text-base-content">
+            <span class="pricing-amount" data-monthly="$99.00" data-annual="$79.00">$99.00</span>
+            <span class="text-sm font-normal tracking-normal text-base-500">
+              <span class="monthly-text" style="display: inline;">/month</span>
+              <span class="annual-text" style="display: none;">
+                /annually
+              </span>
+            </span>
+          </p>
+          <p class="text-sm  mt-2 text-base-500">For startups and teams that treat
+            file storage as a core product, not an afterthought.</p>
+          <div class="mt-4 pt-4 border-t border-base-200  ">
+            <p class="text-xs  font-medium uppercase text-base-500">Core plan includes:</p>
+            <ul class="flex flex-col mt-4 text-sm  gap-y-3 text-base-content" role="list">
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>100,000+ files/mo</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Dedicated IPs (no sharing)</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>SSO &amp; enterprise auth</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Live log stream + debugging</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Blocklist monitoring &amp; auto-removal</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>Premium SLA &amp; uptime guarantees</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-check size-4 shrink-0 text-base-500"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M5 12l5 5l10 -10"></path>
+                </svg>
+                <span>VIP onboarding + migration</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="w-full mt-8 flex justify-center">
+          <.button variant="primary">Get Started</.button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module">
+    // Initialize vanilla JS pricing toggle functionality
+    document.addEventListener("DOMContentLoaded", function () {
+      const monthlyBtn = document.getElementById("monthly-btn");
+      const annualBtn = document.getElementById("annual-btn");
+      const toggleSlider = document.getElementById("toggle-slider");
+      const pricingAmounts = document.querySelectorAll(".pricing-amount");
+      const monthlyTexts = document.querySelectorAll(".monthly-text");
+      const annualTexts = document.querySelectorAll(".annual-text");
+
+      // accent state is monthly
+      let currentDuration = "monthly";
+
+      // Function to update UI based on selected duration
+      function updatePricingUI(duration) {
+        // Update toggle slider position
+        if (duration === "monthly") {
+          toggleSlider.style.transform = "translateX(0)";
+          monthlyBtn.classList.add("text-base-600");
+          monthlyBtn.classList.remove(
+            "focus:text-base-content",
+            "hover:text-base-content"
+          );
+          annualBtn.classList.remove("text-base-600");
+          annualBtn.classList.add("focus:text-base-content", "hover:text-base-content");
+          monthlyBtn.setAttribute("aria-pressed", "true");
+          annualBtn.setAttribute("aria-pressed", "false");
+        } else {
+          toggleSlider.style.transform = "translateX(100%)";
+          annualBtn.classList.add("text-base-600");
+          annualBtn.classList.remove(
+            "focus:text-base-content",
+            "hover:text-base-content"
+          );
+          monthlyBtn.classList.remove("text-base-600");
+          monthlyBtn.classList.add(
+            "focus:text-base-content",
+            "hover:text-base-content"
+          );
+          monthlyBtn.setAttribute("aria-pressed", "false");
+          annualBtn.setAttribute("aria-pressed", "true");
+        }
+
+        // Update pricing text
+        pricingAmounts.forEach((amount) => {
+          amount.textContent = amount.dataset[duration];
+        });
+
+        // Show/hide appropriate text
+        if (duration === "monthly") {
+          monthlyTexts.forEach((text) => (text.style.display = "inline"));
+          annualTexts.forEach((text) => (text.style.display = "none"));
+        } else {
+          monthlyTexts.forEach((text) => (text.style.display = "none"));
+          annualTexts.forEach((text) => (text.style.display = "inline"));
+        }
+
+        // Update current duration
+        currentDuration = duration;
+      }
+
+      // Add event listeners to buttons
+      monthlyBtn.addEventListener("click", function () {
+        updatePricingUI("monthly");
+      });
+
+      annualBtn.addEventListener("click", function () {
+        updatePricingUI("annual");
+      });
+
+      // Initialize UI
+      updatePricingUI(currentDuration);
+    });
+  </script>
+</section>

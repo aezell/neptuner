@@ -1,0 +1,146 @@
+/* Prose styling for markdown content */
+.prose {
+  /* Layout and spacing */
+  @apply max-w-none;
+  
+  /* Typography base */
+  @apply text-base text-base-content;
+  line-height: 1.7;
+}
+
+/* Headings */
+.prose h1 {
+  @apply text-2xl sm:text-3xl md:text-4xl font-serif font-medium tracking-tight text-base-content mt-12 mb-6 first:mt-0;
+}
+
+.prose h2 {
+  @apply text-xl sm:text-2xl md:text-3xl font-serif font-medium tracking-tight text-base-content mt-10 mb-5;
+}
+
+.prose h3 {
+  @apply text-lg sm:text-xl md:text-2xl font-serif font-medium tracking-tight text-base-content mt-8 mb-4;
+}
+
+.prose h4 {
+  @apply text-base sm:text-lg md:text-xl font-serif font-medium tracking-tight text-base-content mt-6 mb-3;
+}
+
+.prose h5 {
+  @apply text-base font-serif font-medium tracking-tight text-base-content mt-6 mb-3;
+}
+
+.prose h6 {
+  @apply text-sm font-serif font-medium tracking-tight text-base-content mt-6 mb-3;
+}
+
+/* Paragraphs and text */
+.prose p {
+  @apply text-base text-base-content mb-6;
+}
+
+.prose strong {
+  @apply font-semibold text-base-content;
+}
+
+.prose em {
+  @apply italic;
+}
+
+/* Links */
+.prose a {
+  @apply text-accent-600 hover:text-accent-700 underline underline-offset-2 decoration-1;
+  transition: color 0.3s ease;
+}
+
+/* Lists */
+.prose ul {
+  @apply list-disc pl-6 mb-6 space-y-2;
+}
+
+.prose ol {
+  @apply list-decimal pl-6 mb-6 space-y-2;
+}
+
+.prose li {
+  @apply text-base text-base-content;
+}
+
+.prose li > p {
+  @apply mb-2;
+}
+
+/* Nested lists */
+.prose ul ul,
+.prose ul ol,
+.prose ol ul,
+.prose ol ol {
+  @apply mt-2 mb-2;
+}
+
+/* Blockquotes */
+.prose blockquote {
+  @apply border-l-4 border-accent-300 pl-6 pr-4 py-2 mb-6 bg-base-200 rounded-r-lg;
+}
+
+.prose blockquote p {
+  @apply text-base-500 italic mb-0;
+}
+
+/* Code */
+.prose code {
+  @apply bg-base-200 text-accent-700 px-2 py-1 rounded text-sm font-mono;
+}
+
+.prose pre {
+  @apply bg-base-200 rounded-xl p-4 mb-6 overflow-x-auto;
+}
+
+.prose pre code {
+  @apply bg-transparent text-base-content px-0 py-0;
+}
+
+/* Tables */
+.prose table {
+  @apply w-full border-collapse border border-base-300 rounded-lg mb-6 overflow-hidden;
+}
+
+.prose th {
+  @apply bg-base-200 border border-base-300 px-4 py-3 text-left font-medium text-base-content;
+}
+
+.prose td {
+  @apply border border-base-300 px-4 py-3 text-base-content;
+}
+
+.prose tr:nth-child(even) {
+  @apply bg-base-100;
+}
+
+/* Horizontal rules */
+.prose hr {
+  @apply border-t border-base-300 border-dashed my-8;
+}
+
+/* Images */
+.prose img {
+  @apply rounded-xl mb-6 max-w-full h-auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .prose {
+    @apply text-sm;
+  }
+  
+  .prose h1 {
+    @apply text-xl;
+  }
+  
+  .prose h2 {
+    @apply text-lg;
+  }
+  
+  .prose h3 {
+    @apply text-base;
+  }
+}

@@ -1,0 +1,64 @@
+<LiveToast.toast_group
+  flash={@flash}
+  connected={assigns[:socket] != nil}
+  toasts_sync={assigns[:toasts_sync]}
+/>
+
+<.nav current_scope={@current_scope} />
+
+<main class="grow">
+  <div class="max-w-4xl mx-auto px-4 py-8 mt-24">
+    <header class="py-8">
+      <nav class="mb-6">
+        <a href={~p"/blog"} class="inline-flex items-center text-primary hover:text-secondary">
+          <.icon name="hero-arrow-left" class="w-4 h-4 mr-2" /> Back to Blog
+        </a>
+      </nav>
+
+      <div class="mb-6">
+        <h1 class="text-4xl font-bold text-base-content mb-4"><%= @post.title %></h1>
+
+        <div class="flex items-center text-sm text-secondary-content mb-4">
+          <%= if @post.author_name do %>
+            <span><%= @post.author_name %></span>
+            <span class="mx-2">•</span>
+          <% end %>
+          <time><%= Calendar.strftime(@post.published_at, "%B %d, %Y") %></time>
+          <%= if @post.reading_time_minutes do %>
+            <span class="mx-2">•</span>
+            <span><%= @post.reading_time_minutes %> min read</span>
+          <% end %>
+        </div>
+      </div>
+
+      <%= if @post.featured_image_url do %>
+        <img src={@post.featured_image_url} alt={@post.title} class="w-full h-64 object-cover rounded-lg mb-8" />
+      <% end %>
+    </header>
+
+    <article class="prose prose-lg max-w-none">
+      {raw(Neptuner.Blog.Post.render_content(@post))}
+    </article>
+
+    <div class="mt-12 pt-8 border-t border-gray-200">
+      <div class="flex justify-between items-center">
+        <a href={~p"/blog"} class="inline-flex items-center text-primary hover:text-primary">
+          <.icon name="hero-arrow-left" class="w-4 h-4 mr-2" /> Back to Blog
+        </a>
+
+        <div class="flex items-center gap-4">
+          <span class="text-sm text-secondary-content">Share this article:</span>
+          <div class="flex gap-2">
+            <a href={"https://twitter.com/intent/tweet?url=#{url(~p"/blog/#{@post.slug}")}&text=#{@post.title}"}
+               target="_blank"
+               class="text-secondary-content hover:text-primary">
+              <.icon name="hero-share" class="w-5 h-5" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<.footer />

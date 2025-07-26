@@ -1,0 +1,58 @@
+<LiveToast.toast_group
+  flash={@flash}
+  connected={assigns[:socket] != nil}
+  toasts_sync={assigns[:toasts_sync]}
+/>
+
+<.nav current_scope={@current_scope} />
+
+<main class="grow">
+  <div class="max-w-4xl mx-auto px-4 py-8 mt-24">
+    <header class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-base-content mb-4">Blog</h1>
+      <p class="text-lg text-secondary-content">Latest articles and insights from our team</p>
+    </header>
+
+    <%= if @posts == [] do %>
+      <div class="text-center py-12">
+        <p class="text-secondary-content">No blog posts published yet.</p>
+      </div>
+    <% else %>
+      <div class="grid gap-8">
+        <%= for post <- @posts do %>
+          <article class="rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+            <%= if post.featured_image_url do %>
+              <img src={post.featured_image_url} alt={post.title} class="w-full h-48 object-cover" />
+            <% end %>
+
+            <div class="p-6">
+              <div class="flex items-center text-sm text-secondary-content mb-2">
+                <%= if post.author_name do %>
+                  <span><%= post.author_name %></span>
+                  <span class="mx-2">•</span>
+                <% end %>
+                <time><%= Calendar.strftime(post.published_at, "%B %d, %Y") %></time>
+                <%= if post.reading_time_minutes do %>
+                  <span class="mx-2">•</span>
+                  <span><%= post.reading_time_minutes %> min read</span>
+                <% end %>
+              </div>
+
+              <h2 class="text-xl font-semibold text-base-content mb-3">
+                <a href={~p"/blog/#{post.slug}"} class="hover:text-primary">
+                  <%= post.title %>
+                </a>
+              </h2>
+
+              <a href={~p"/blog/#{post.slug}"} class="text-primary hover:text-primary-focus font-medium">
+                Read more →
+              </a>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</main>
+
+<.footer />

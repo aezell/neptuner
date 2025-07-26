@@ -1,0 +1,68 @@
+<.nav current_scope={@current_scope} />
+
+<div class="mx-auto max-w-6xl px-4 py-12 mt-20 sm:px-6 lg:px-8">
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-bold text-base-content mb-4">
+      {gettext("Changelog")}
+    </h1>
+    <p class="text-lg text-secondary-content">
+      {gettext("Stay updated with the latest features, improvements, and fixes")}
+    </p>
+  </div>
+
+  <div class="space-y-8">
+    <%= for entry <- @changelog_entries do %>
+      <div class="rounded-lg bg-base-200 overflow-hidden">
+        <div class="p-6">
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center space-x-3 text-base-content">
+              <span class={[
+                "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-primary bg-base-100"
+              ]}>
+                <%= case entry.type do %>
+                  <% "feature" -> %>
+                    <.icon name="hero-plus-circle" class="w-4 h-4 mr-1" />
+                    {gettext("New Feature")}
+                  <% "improvement" -> %>
+                    <.icon name="hero-arrow-trending-up" class="w-4 h-4 mr-1" />
+                    {gettext("Improvement")}
+                  <% "bugfix" -> %>
+                    <.icon name="hero-bug-ant" class="w-4 h-4 mr-1" />
+                    {gettext("Bug Fix")}
+                  <% _ -> %>
+                    <.icon name="hero-information-circle" class="w-4 h-4 mr-1" />
+                    {gettext("Update")}
+                <% end %>
+              </span>
+              <span class="text-xs font-mono px-2 py-1 rounded">
+                v{entry.version}
+              </span>
+            </div>
+            <time class="text-xs font-medium">
+              {entry.date}
+            </time>
+          </div>
+
+          <h3 class="text-xl font-semibold mb-3">
+            {entry.title}
+          </h3>
+
+          <p class="text-secondary-content leading-relaxed">
+            {entry.description}
+          </p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-12 text-center">
+    <div class="inline-flex items-center px-4 py-2 bg-gray-50 rounded-lg">
+      <.icon name="hero-clock" class="w-5 h-5 text-secondary-content mr-2" />
+      <span class="text-sm text-secondary-content">
+        {gettext("Updates are published regularly")}
+      </span>
+    </div>
+  </div>
+</div>
+
+<.footer />
