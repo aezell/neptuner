@@ -21,8 +21,9 @@ defmodule Neptuner.Application do
       {Oban, Application.fetch_env!(:neptuner, Oban)},
       {Phoenix.PubSub, name: Neptuner.PubSub},
       {NeptunerWeb.RateLimit, clean_period: :timer.minutes(1)},
-      # Start a worker by calling: Neptuner.Worker.start_link(arg)
-      # {Neptuner.Worker, arg},
+      # Neptuner services
+      Neptuner.Connections.TokenRefreshScheduler,
+      Neptuner.Workers.PeriodicSyncScheduler,
       # Start to serve requests, typically the last entry
       NeptunerWeb.Endpoint
     ]

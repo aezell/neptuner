@@ -22,29 +22,36 @@
         <%= for post <- @posts do %>
           <article class="rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
             <%= if post.featured_image_url do %>
-              <img src={post.featured_image_url} alt={post.title} class="w-full h-48 object-cover" />
+              <img
+                src={post.featured_image_url}
+                alt={post.title}
+                class="w-full h-48 object-cover"
+              />
             <% end %>
 
             <div class="p-6">
               <div class="flex items-center text-sm text-secondary-content mb-2">
                 <%= if post.author_name do %>
-                  <span><%= post.author_name %></span>
+                  <span>{post.author_name}</span>
                   <span class="mx-2">•</span>
                 <% end %>
-                <time><%= Calendar.strftime(post.published_at, "%B %d, %Y") %></time>
+                <time>{Calendar.strftime(post.published_at, "%B %d, %Y")}</time>
                 <%= if post.reading_time_minutes do %>
                   <span class="mx-2">•</span>
-                  <span><%= post.reading_time_minutes %> min read</span>
+                  <span>{post.reading_time_minutes} min read</span>
                 <% end %>
               </div>
 
               <h2 class="text-xl font-semibold text-base-content mb-3">
                 <a href={~p"/blog/#{post.slug}"} class="hover:text-primary">
-                  <%= post.title %>
+                  {post.title}
                 </a>
               </h2>
 
-              <a href={~p"/blog/#{post.slug}"} class="text-primary hover:text-primary-focus font-medium">
+              <a
+                href={~p"/blog/#{post.slug}"}
+                class="text-primary hover:text-primary-focus font-medium"
+              >
                 Read more →
               </a>
             </div>

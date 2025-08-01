@@ -25,9 +25,13 @@ import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 import { createLiveToastHook } from "live_toast";
 import { Hooks as BackpexHooks } from "backpex";
+import { FeatureHighlight, Hotspot, DashboardTour } from "./tour_hooks";
 
 const Hooks = {
   LiveToast: createLiveToastHook(),
+  FeatureHighlight,
+  Hotspot,
+  DashboardTour,
   ...BackpexHooks,
 };
 

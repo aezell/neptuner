@@ -137,14 +137,44 @@ defmodule NeptunerWeb.Router do
       live "/organisations/new", OrganisationsLive.New, :new
     end
 
-    live_session :fully_authenticated_user,
+    # Onboarding route (no onboarding check for obvious reasons)
+    live_session :onboarding_flow,
       on_mount: [
         {NeptunerWeb.UserAuth, :require_authenticated},
         {NeptunerWeb.UserAuth, :assign_org_to_scope},
         {NeptunerWeb.UserAuth, :require_organisation}
       ] do
+      live "/onboarding", OnboardingLive, :index
+    end
+
+    # Main app routes that check for onboarding completion
+    live_session :fully_authenticated_user,
+      on_mount: [
+        {NeptunerWeb.UserAuth, :require_authenticated},
+        {NeptunerWeb.UserAuth, :assign_org_to_scope},
+        {NeptunerWeb.UserAuth, :require_organisation},
+        {NeptunerWeb.UserAuth, :redirect_if_onboarding_needed}
+      ] do
       live "/dashboard", DashboardLive, :index
       live "/organisations/manage", OrganisationsLive.Manage, :manage
+      live "/connections", ConnectionsLive.Index, :index
+      live "/tasks", TasksLive.Index, :index
+      live "/tasks/new", TasksLive.Index, :new
+      live "/tasks/:id/edit", TasksLive.Index, :edit
+      live "/habits", HabitsLive.Index, :index
+      live "/habits/new", HabitsLive.Index, :new
+      live "/habits/:id/edit", HabitsLive.Index, :edit
+      live "/calendar", CalendarLive.Index, :index
+      live "/communications", CommunicationsLive.Index, :index
+      live "/achievements", AchievementsLive.Index, :index
+      live "/import", ImportLive.Index, :index
+      live "/subscription", SubscriptionLive, :index
+
+      # CalDAV connection form
+      live "/connections/caldav/new", ConnectionsLive.CalDAVNew, :new
+
+      # Premium data export
+      get "/export", ExportController, :export_options
     end
 
     post "/users/log-in", UserSessionController, :create
@@ -156,5 +186,45 @@ defmodule NeptunerWeb.Router do
       get "/github", GitHubAuthController, :request
       get "/github/callback", GitHubAuthController, :callback
     end
+  end
+
+  # Service OAuth (separate from user auth)
+  scope "/oauth", NeptunerWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    get "/:provider/connect", ServiceOAuthController, :connect
+    get "/:provider/callback", ServiceOAuthController, :callback
+    delete "/:id/disconnect", ServiceOAuthController, :disconnect
+  end
+
+  # Sync API endpoints
+  scope "/sync", NeptunerWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    post "/connection/:connection_id", SyncController, :sync_connection
+    post "/all", SyncController, :sync_all_connections
+    get "/status", SyncController, :sync_status
+
+    # Test endpoints for integration debugging
+    post "/test/calendar/:connection_id", SyncController, :test_calendar_sync
+    post "/test/email/:connection_id", SyncController, :test_email_sync
+  end
+
+  # Data export endpoints (premium feature)
+  scope "/export", NeptunerWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    post "/all", ExportController, :export_all
+    post "/dataset", ExportController, :export_dataset
+  end
+
+  # Webhook endpoints (no authentication required for external services)
+  scope "/webhooks", NeptunerWeb do
+    pipe_through :api
+
+    post "/google/calendar", WebhookController, :google_calendar
+    post "/google/gmail", WebhookController, :gmail
+    post "/microsoft/graph", WebhookController, :microsoft_graph
+    get "/health", WebhookController, :health
   end
 end

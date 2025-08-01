@@ -440,7 +440,7 @@ defmodule NeptunerWeb.CoreComponents do
   def product_logo(assigns) do
     ~H"""
     <svg
-      id="logo-51"
+      id="neptuner-logo"
       width="40"
       height="40"
       viewBox="0 0 40 40"
@@ -449,13 +449,58 @@ defmodule NeptunerWeb.CoreComponents do
       alt={Application.get_env(:neptuner, :app_name) <> " logo"}
       aria-label={Application.get_env(:neptuner, :app_name) <> " logo"}
     >
+      <defs>
+        <linearGradient id="cosmic-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#663399;stop-opacity:1" />
+          <stop offset="50%" style="stop-color:#4A90E2;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#663399;stop-opacity:1" />
+        </linearGradient>
+        <radialGradient id="star-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.8" />
+          <stop offset="100%" style="stop-color:#FFD700;stop-opacity:0" />
+        </radialGradient>
+      </defs>
+      <!-- Neptune planet body -->
+      <circle cx="20" cy="20" r="15" fill="url(#cosmic-gradient)" />
+      <!-- Cosmic rings -->
+      <ellipse
+        cx="20"
+        cy="20"
+        rx="18"
+        ry="6"
+        fill="none"
+        stroke="url(#cosmic-gradient)"
+        stroke-width="1.5"
+        opacity="0.6"
+      />
+      <ellipse
+        cx="20"
+        cy="20"
+        rx="22"
+        ry="8"
+        fill="none"
+        stroke="url(#cosmic-gradient)"
+        stroke-width="1"
+        opacity="0.4"
+      />
+      <!-- Productivity orbit paths -->
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
-        d="M8.65417 3.89149C7.22351 4.89185 5.92981 6.0746 4.80676 7.40602C9.39606 6.97995 15.2266 7.67567 21.9958 11.0603C29.2244 14.6745 35.0452 14.7967 39.0962 14.0153C38.7286 12.9024 38.2658 11.8328 37.7177 10.816C33.0804 11.3051 27.1354 10.6577 20.207 7.1936C15.8074 4.9938 11.9292 4.08763 8.65417 3.89149ZM35.0088 6.96027C31.3467 2.86862 26.0248 0.293625 20.1014 0.293625C18.3619 0.293625 16.6741 0.515732 15.0651 0.933105C17.2443 1.52771 19.5593 2.39761 21.9958 3.61589C27.0684 6.15215 31.4478 6.96878 35.0088 6.96027ZM39.9623 17.9217C35.0683 18.8881 28.3102 18.6896 20.207 14.638C12.6314 10.8502 6.60187 10.8979 2.53534 11.8016C2.32544 11.8482 2.12048 11.8972 1.92047 11.9482C1.38806 13.1061 0.963074 14.3237 0.658142 15.5881C0.983826 15.5011 1.32037 15.4184 1.6676 15.3412C6.60101 14.2449 13.5715 14.2925 21.9958 18.5047C29.5715 22.2925 35.601 22.2448 39.6676 21.3411C39.8069 21.3102 39.9442 21.2782 40.0792 21.2452C40.094 20.9299 40.1014 20.6126 40.1014 20.2936C40.1014 19.4911 40.0542 18.6996 39.9623 17.9217ZM39.4262 25.4659C34.5797 26.3132 28.0184 25.988 20.207 22.0824C12.6314 18.2946 6.60187 18.3423 2.53534 19.246C1.63269 19.4465 0.820679 19.6908 0.10437 19.9487C0.102417 20.0634 0.10144 20.1784 0.10144 20.2936C0.10144 31.3393 9.05573 40.2936 20.1014 40.2936C29.3585 40.2936 37.1467 34.0045 39.4262 25.4659Z"
-        class="ccustom fill-primary"
-      >
-      </path>
+        d="M 8 20 Q 20 8 32 20 Q 20 32 8 20"
+        fill="none"
+        stroke="#4A90E2"
+        stroke-width="0.8"
+        opacity="0.5"
+        stroke-dasharray="2,2"
+      />
+      <!-- Stars representing achievements -->
+      <g fill="url(#star-glow)">
+        <polygon points="12,8 13,11 16,10 14,13 17,15 13,14 12,17 11,14 7,15 10,13 8,10 11,11" />
+        <polygon points="28,6 29,8 31,7 30,9 32,10 29,9 28,11 27,9 25,10 27,9 26,7 27,8" />
+        <polygon points="32,28 33,30 35,29 34,31 36,32 33,31 32,33 31,31 29,32 31,31 30,29 31,30" />
+      </g>
+      <!-- Central cosmic energy -->
+      <circle cx="20" cy="20" r="3" fill="#FFD700" opacity="0.8" />
+      <circle cx="20" cy="20" r="1.5" fill="#FFFFFF" />
     </svg>
     """
   end
@@ -686,5 +731,163 @@ defmodule NeptunerWeb.CoreComponents do
 
   def translate_backpex(msg) when is_binary(msg) do
     Gettext.dgettext(NeptunerWeb.Gettext, "backpex", msg)
+  end
+
+  @doc """
+  Renders a cosmic loading state with existential observations.
+  """
+  attr :message, :string, default: nil
+  attr :size, :string, default: "md", values: ["sm", "md", "lg"]
+  attr :class, :string, default: ""
+
+  def cosmic_loading(assigns) do
+    messages = [
+      "Contemplating the universe...",
+      "Calculating the meaning of productivity...",
+      "Consulting with cosmic forces...",
+      "Aligning with universal productivity patterns...",
+      "Transcending the illusion of busyness...",
+      "Gathering stardust wisdom...",
+      "Measuring existential efficiency...",
+      "Channeling Neptune's energy..."
+    ]
+
+    assigns = assign(assigns, :loading_message, assigns.message || Enum.random(messages))
+
+    ~H"""
+    <div class={"flex flex-col items-center justify-center p-8 #{@class}"}>
+      <div class={"cosmic-loading #{size_class(@size)}"}>
+        <div class="cosmic-spinner"></div>
+      </div>
+      <p class="mt-4 text-cosmic-small text-center text-base-500 italic">
+        {@loading_message}
+      </p>
+    </div>
+    """
+  end
+
+  defp size_class("sm"), do: "w-8 h-8"
+  defp size_class("md"), do: "w-12 h-12"
+  defp size_class("lg"), do: "w-16 h-16"
+
+  @doc """
+  Renders cosmic empty states with philosophical commentary.
+  """
+  attr :title, :string, required: true
+  attr :description, :string, required: true
+  attr :action_text, :string, default: nil
+  attr :action_path, :string, default: nil
+  attr :icon, :string, default: "hero-sparkles"
+  attr :class, :string, default: ""
+
+  def cosmic_empty_state(assigns) do
+    ~H"""
+    <div class={"flex flex-col items-center justify-center p-12 text-center #{@class}"}>
+      <div class="relative mb-6">
+        <div class="absolute inset-0 cosmic-pulse bg-cosmic-100 rounded-full opacity-20"></div>
+        <div class="relative bg-cosmic-gradient-subtle rounded-full p-4">
+          <.icon name={@icon} class="w-12 h-12 text-cosmic-600" />
+        </div>
+      </div>
+
+      <h3 class="text-cosmic-hero mb-3 text-base-content">
+        {@title}
+      </h3>
+
+      <p class="text-cosmic-subheading max-w-md mb-6 text-base-500">
+        {@description}
+      </p>
+
+      <div :if={@action_text && @action_path} class="cosmic-cta">
+        <.link
+          navigate={@action_path}
+          class="btn bg-cosmic-gradient hover-cosmic text-white border-0 shadow-cosmic"
+        >
+          {@action_text}
+        </.link>
+      </div>
+    </div>
+    """
+  end
+
+  @doc """
+  Renders cosmic priority indicators for tasks and items.
+  """
+  attr :priority, :string,
+    required: true,
+    values: ["cosmic", "galactic", "stellar", "terrestrial"]
+
+  attr :class, :string, default: ""
+
+  def cosmic_priority(assigns) do
+    ~H"""
+    <span class={"inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border #{priority_class(@priority)} #{@class}"}>
+      <div class={"w-2 h-2 rounded-full #{priority_dot_class(@priority)}"}></div>
+      {priority_label(@priority)}
+    </span>
+    """
+  end
+
+  defp priority_class("cosmic"), do: "priority-cosmic"
+  defp priority_class("galactic"), do: "priority-galactic"
+  defp priority_class("stellar"), do: "priority-stellar"
+  defp priority_class("terrestrial"), do: "bg-base-200 text-base-600 border-base-300"
+
+  defp priority_dot_class("cosmic"), do: "bg-cosmic-500"
+  defp priority_dot_class("galactic"), do: "bg-nebula-500"
+  defp priority_dot_class("stellar"), do: "bg-star-500"
+  defp priority_dot_class("terrestrial"), do: "bg-base-400"
+
+  defp priority_label("cosmic"), do: "Matters in 10 years"
+  defp priority_label("galactic"), do: "Matters in 10 days"
+  defp priority_label("stellar"), do: "Matters to someone"
+  defp priority_label("terrestrial"), do: "Matters to nobody"
+
+  @doc """
+  Renders cosmic achievement badges with glow effects.
+  """
+  attr :achievement, :map, required: true
+  attr :unlocked, :boolean, default: false
+  attr :class, :string, default: ""
+
+  def cosmic_achievement(assigns) do
+    ~H"""
+    <div class={"relative group #{@class}"}>
+      <div class={[
+        "relative p-4 rounded-xl border transition-all duration-300",
+        if(@unlocked,
+          do: "achievement-glow border-star-300 bg-star-50",
+          else: "border-base-300 bg-base-100 opacity-60"
+        )
+      ]}>
+        <div class="flex items-center gap-3">
+          <div class={[
+            "flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center",
+            if(@unlocked, do: "bg-star-shimmer", else: "bg-base-200")
+          ]}>
+            <.icon
+              name={@achievement.icon || "hero-star"}
+              class={if(@unlocked, do: "w-5 h-5 text-white", else: "w-5 h-5 text-base-400")}
+            />
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <h4 class={[
+              "font-medium text-sm",
+              if(@unlocked, do: "text-star-800", else: "text-base-500")
+            ]}>
+              {@achievement.name}
+            </h4>
+            <p class={[
+              "text-xs mt-1",
+              if(@unlocked, do: "text-star-600", else: "text-base-400")
+            ]}>
+              {@achievement.description}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    """
   end
 end

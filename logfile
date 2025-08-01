@@ -1,0 +1,22 @@
+2025-07-31 15:07:27.443 CDT [9068] LOG:  starting PostgreSQL 17.5 on aarch64-apple-darwin24.5.0, compiled by Apple clang version 17.0.0 (clang-1700.0.13.5), 64-bit
+2025-07-31 15:07:27.444 CDT [9068] LOG:  listening on IPv6 address "::1", port 5432
+2025-07-31 15:07:27.444 CDT [9068] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-07-31 15:07:27.444 CDT [9068] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-07-31 15:07:27.454 CDT [9071] LOG:  database system was shut down at 2025-07-30 23:35:49 CDT
+2025-07-31 15:07:27.459 CDT [9068] LOG:  database system is ready to accept connections
+2025-07-31 15:12:27.447 CDT [9069] LOG:  checkpoint starting: time
+2025-07-31 15:12:30.005 CDT [9069] LOG:  checkpoint complete: wrote 27 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.551 s, sync=0.003 s, total=2.559 s; sync files=25, longest=0.001 s, average=0.001 s; distance=118 kB, estimate=118 kB; lsn=0/4DEA9A0, redo lsn=0/4DEA948
+2025-07-31 15:27:28.987 CDT [9069] LOG:  checkpoint starting: time
+2025-07-31 15:27:39.452 CDT [9069] LOG:  checkpoint complete: wrote 105 buffers (0.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=10.457 s, sync=0.006 s, total=10.466 s; sync files=66, longest=0.001 s, average=0.001 s; distance=414 kB, estimate=414 kB; lsn=0/4E52220, redo lsn=0/4E52190
+2025-07-31 17:06:58.588 CDT [9069] LOG:  checkpoint starting: immediate force wait
+2025-07-31 17:06:58.590 CDT [9069] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.003 s; sync files=5, longest=0.001 s, average=0.001 s; distance=84 kB, estimate=381 kB; lsn=0/4E67220, redo lsn=0/4E671C8
+2025-07-31 17:11:58.593 CDT [9069] LOG:  checkpoint starting: time
+2025-07-31 17:13:45.647 CDT [9069] LOG:  checkpoint complete: wrote 1060 buffers (6.5%); 0 WAL file(s) added, 0 removed, 1 recycled; write=107.027 s, sync=0.022 s, total=107.054 s; sync files=491, longest=0.001 s, average=0.001 s; distance=5513 kB, estimate=5513 kB; lsn=0/53C99E8, redo lsn=0/53C9958
+2025-07-31 20:26:58.556 CDT [9069] LOG:  checkpoint starting: time
+2025-07-31 20:26:59.579 CDT [9069] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.019 s, sync=0.001 s, total=1.023 s; sync files=10, longest=0.001 s, average=0.001 s; distance=50 kB, estimate=4967 kB; lsn=0/53D64B8, redo lsn=0/53D63E8
+2025-07-31 20:31:58.576 CDT [9069] LOG:  checkpoint starting: time
+2025-07-31 20:31:58.785 CDT [9069] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.205 s, sync=0.001 s, total=0.209 s; sync files=3, longest=0.001 s, average=0.001 s; distance=47 kB, estimate=4475 kB; lsn=0/53E2100, redo lsn=0/53E20A8
+2025-07-31 20:36:58.782 CDT [9069] LOG:  checkpoint starting: time
+2025-07-31 20:37:02.643 CDT [9069] LOG:  checkpoint complete: wrote 40 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.856 s, sync=0.003 s, total=3.861 s; sync files=24, longest=0.001 s, average=0.001 s; distance=57 kB, estimate=4033 kB; lsn=0/53F09C0, redo lsn=0/53F0760
+2025-07-31 20:41:58.641 CDT [9069] LOG:  checkpoint starting: time
+2025-07-31 20:42:00.674 CDT [9069] LOG:  checkpoint complete: wrote 21 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.028 s, sync=0.003 s, total=2.033 s; sync files=18, longest=0.001 s, average=0.001 s; distance=71 kB, estimate=3637 kB; lsn=0/5402580, redo lsn=0/5402410

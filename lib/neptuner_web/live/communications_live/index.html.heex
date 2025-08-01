@@ -1,0 +1,284 @@
+<Layouts.dashboard flash={@flash} current_scope={@current_scope}>
+  <div class="space-y-6">
+    <.header>
+      Email Intelligence Dashboard
+      <:subtitle>
+        Digital communication analysis with existential commentary on inbox productivity
+      </:subtitle>
+      <:actions>
+        <.button
+          phx-click="sync_emails"
+          class={["btn-primary", if(@email_connections == [], do: "btn-disabled", else: "")]}
+        >
+          <.icon name="hero-arrow-path" class="w-4 h-4 mr-2" /> Sync Emails
+        </.button>
+
+        <.button phx-click="toggle_insights" class="btn-ghost">
+          <.icon name="hero-light-bulb" class="w-4 h-4 mr-2" />
+          {if @show_insights, do: "Hide", else: "Show"} Insights
+        </.button>
+      </:actions>
+    </.header>
+    
+<!-- Connection Status Alert -->
+    <%= if @email_connections == [] do %>
+      <div class="alert alert-warning">
+        <.icon name="hero-exclamation-triangle" class="w-5 h-5" />
+        <div class="ml-2">
+          <h3 class="font-medium">No Email Connections</h3>
+          <p class="text-sm">
+            Connect your email accounts to begin analyzing your digital communication patterns.
+            <.link navigate={~p"/connections"} class="link link-primary ml-1">
+              Go to Connections →
+            </.link>
+          </p>
+        </div>
+      </div>
+    <% end %>
+    
+<!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="stat bg-base-100 rounded-lg shadow">
+        <div class="stat-figure text-primary">
+          <.icon name="hero-envelope" class="w-8 h-8" />
+        </div>
+        <div class="stat-title">Total Emails</div>
+        <div class="stat-value text-2xl">{@statistics.total_emails}</div>
+        <div class="stat-desc">In analysis database</div>
+      </div>
+
+      <div class="stat bg-base-100 rounded-lg shadow">
+        <div class="stat-figure text-error">
+          <.icon name="hero-fire" class="w-8 h-8" />
+        </div>
+        <div class="stat-title">Digital Noise</div>
+        <div class="stat-value text-2xl">{@statistics.noise_percentage}%</div>
+        <div class="stat-desc">Meaningless chatter</div>
+      </div>
+
+      <div class="stat bg-base-100 rounded-lg shadow">
+        <div class="stat-figure text-warning">
+          <.icon name="hero-clock" class="w-8 h-8" />
+        </div>
+        <div class="stat-title">Time Lost</div>
+        <div class="stat-value text-2xl">{@statistics.total_hours_lost_to_noise}</div>
+        <div class="stat-desc">Hours to noise</div>
+      </div>
+
+      <div class="stat bg-base-100 rounded-lg shadow">
+        <div class="stat-figure text-info">
+          <.icon name="hero-arrow-path" class="w-8 h-8" />
+        </div>
+        <div class="stat-title">Response Time</div>
+        <div class="stat-value text-lg">
+          <%= if @statistics.average_response_time_hours do %>
+            {@statistics.average_response_time_hours}h
+          <% else %>
+            N/A
+          <% end %>
+        </div>
+        <div class="stat-desc">Average response</div>
+      </div>
+    </div>
+    
+<!-- Existential Insights Panel -->
+    <%= if @show_insights do %>
+      <div class="card bg-base-100 shadow-lg">
+        <div class="card-body">
+          <h2 class="card-title">
+            <.icon name="hero-light-bulb" class="w-5 h-5" /> Existential Email Insights
+          </h2>
+
+          <div class="space-y-2">
+            <%= for insight <- @insights do %>
+              <div class="alert alert-info">
+                <.icon name="hero-information-circle" class="w-5 h-5" />
+                <span>{insight}</span>
+              </div>
+            <% end %>
+          </div>
+
+          <div class="divider">Communication Philosophy</div>
+          <p class="text-sm text-base-content/70">
+            Email is not productivity—it's the illusion of productivity.
+            The most productive email response is often no response at all.
+            Your inbox is not a to-do list; it's someone else's agenda for your time.
+          </p>
+        </div>
+      </div>
+    <% end %>
+    
+<!-- Email Classification Filters -->
+    <div class="flex flex-wrap gap-2">
+      <button
+        class={[
+          "btn btn-sm",
+          if(@filter_classification == "all", do: "btn-primary", else: "btn-ghost")
+        ]}
+        phx-click="filter_classification"
+        phx-value-classification="all"
+      >
+        All Emails ({@statistics.total_emails})
+      </button>
+
+      <button
+        class={[
+          "btn btn-sm",
+          if(@filter_classification == "urgent_important", do: "btn-primary", else: "btn-ghost")
+        ]}
+        phx-click="filter_classification"
+        phx-value-classification="urgent_important"
+      >
+        Urgent & Important ({@statistics.urgent_important})
+      </button>
+
+      <button
+        class={[
+          "btn btn-sm",
+          if(@filter_classification == "urgent_unimportant", do: "btn-primary", else: "btn-ghost")
+        ]}
+        phx-click="filter_classification"
+        phx-value-classification="urgent_unimportant"
+      >
+        Urgent but Unimportant ({@statistics.urgent_unimportant})
+      </button>
+
+      <button
+        class={[
+          "btn btn-sm",
+          if(@filter_classification == "not_urgent_important",
+            do: "btn-primary",
+            else: "btn-ghost"
+          )
+        ]}
+        phx-click="filter_classification"
+        phx-value-classification="not_urgent_important"
+      >
+        Important but Not Urgent ({@statistics.not_urgent_important})
+      </button>
+
+      <button
+        class={[
+          "btn btn-sm",
+          if(@filter_classification == "digital_noise", do: "btn-primary", else: "btn-ghost")
+        ]}
+        phx-click="filter_classification"
+        phx-value-classification="digital_noise"
+      >
+        Digital Noise ({@statistics.digital_noise})
+      </button>
+    </div>
+    
+<!-- Email List -->
+    <div class="card bg-base-100 shadow-lg">
+      <div class="card-body">
+        <h2 class="card-title">Recent Communications</h2>
+
+        <%= if @emails == [] do %>
+          <div class="text-center py-8">
+            <.icon name="hero-inbox" class="w-16 h-16 mx-auto text-base-content/30 mb-4" />
+            <h3 class="text-lg font-medium text-base-content/70">No emails found</h3>
+            <p class="text-sm text-base-content/50">
+              <%= if @filter_classification == "all" do %>
+                Sync your email connections to begin analysis
+              <% else %>
+                Try adjusting your filters or sync more emails
+              <% end %>
+            </p>
+          </div>
+        <% else %>
+          <div class="space-y-4">
+            <%= for email <- @emails do %>
+              <div class="border border-base-300 rounded-lg p-4 hover:bg-base-50 transition-colors">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class={[
+                        "badge badge-sm",
+                        classification_badge_class(email.classification)
+                      ]}>
+                        {Neptuner.Communications.EmailSummary.classification_display_name(
+                          email.classification
+                        )}
+                      </span>
+
+                      <%= if email.importance_score do %>
+                        <span class={[
+                          "text-xs font-medium",
+                          productivity_score_color(email.importance_score)
+                        ]}>
+                          Score: {email.importance_score}/10
+                        </span>
+                      <% end %>
+
+                      <%= unless email.is_read do %>
+                        <span class="badge badge-primary badge-xs">New</span>
+                      <% end %>
+                    </div>
+
+                    <h3 class="font-medium text-base-content truncate">
+                      {email.subject}
+                    </h3>
+
+                    <p class="text-sm text-base-content/70 mb-2">
+                      From: {email.sender_name || email.sender_email}
+                    </p>
+
+                    <%= if email.body_preview do %>
+                      <p class="text-sm text-base-content/60 line-clamp-2">
+                        {email.body_preview}
+                      </p>
+                    <% end %>
+
+                    <div class="flex items-center gap-4 mt-2 text-xs text-base-content/50">
+                      <span>{time_ago(email.received_at)}</span>
+
+                      <%= if email.response_time_hours do %>
+                        <span>Responded in {email.response_time_hours}h</span>
+                      <% end %>
+
+                      <%= if email.time_spent_minutes do %>
+                        <span>{email.time_spent_minutes}min spent</span>
+                      <% end %>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <%= unless email.is_read do %>
+                      <button
+                        class="btn btn-ghost btn-xs"
+                        phx-click="mark_read"
+                        phx-value-id={email.id}
+                        title="Mark as read"
+                      >
+                        <.icon name="hero-check" class="w-3 h-3" />
+                      </button>
+                    <% end %>
+
+                    <button
+                      class="btn btn-ghost btn-xs text-error"
+                      phx-click="delete_email"
+                      phx-value-id={email.id}
+                      phx-data-confirm="Remove this email from analysis?"
+                      title="Delete from analysis"
+                    >
+                      <.icon name="hero-trash" class="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+
+                <div class="mt-3 pt-3 border-t border-base-300">
+                  <p class="text-xs text-base-content/60 italic">
+                    {Neptuner.Communications.EmailSummary.classification_description(
+                      email.classification
+                    )}
+                  </p>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</Layouts.dashboard>

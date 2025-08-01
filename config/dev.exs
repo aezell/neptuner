@@ -83,7 +83,6 @@ config :phoenix_live_view,
   # Enable helpful, but potentially expensive runtime checks
   enable_expensive_runtime_checks: true
 
-
 # LemonSqueezy development configuration
 config :lemon_ex,
   api_key: "test_api_key",

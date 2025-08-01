@@ -10,7 +10,7 @@ import Config
 config :neptuner, Oban,
   engine: Oban.Engines.Basic,
   notifier: Oban.Notifiers.Postgres,
-  queues: [default: 10],
+  queues: [default: 10, token_refresh: 5],
   repo: Neptuner.Repo
 
 config :neptuner, :scopes,

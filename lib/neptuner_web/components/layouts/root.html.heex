@@ -7,33 +7,41 @@
     <.live_title default="Neptuner" suffix=" · Phoenix Framework">
       {assigns[:page_title]}
     </.live_title>
-<!-- SEO Meta Tags -->
-<meta :if={assigns[:meta_description]} name="description" content={@meta_description} />
-<meta :if={assigns[:meta_keywords] && @meta_keywords != []} name="keywords" content={Enum.join(@meta_keywords, ", ")} />
-<meta :if={assigns[:meta_author]} name="author" content={@meta_author} />
-
+    <!-- SEO Meta Tags -->
+    <meta :if={assigns[:meta_description]} name="description" content={@meta_description} />
+    <meta
+      :if={assigns[:meta_keywords] && @meta_keywords != []}
+      name="keywords"
+      content={Enum.join(@meta_keywords, ", ")}
+    />
+    <meta :if={assigns[:meta_author]} name="author" content={@meta_author} />
+    
 <!-- Open Graph Meta Tags -->
-<meta property="og:title" content={assigns[:page_title] || "Neptuner"} />
-<meta :if={assigns[:meta_description]} property="og:description" content={@meta_description} />
-<meta :if={assigns[:meta_url]} property="og:url" content={@meta_url} />
-<meta property="og:type" content={assigns[:meta_type] || "website"} />
-<meta :if={assigns[:meta_image]} property="og:image" content={@meta_image} />
-<meta property="og:site_name" content={Application.get_env(:neptuner, :app_name)} />
-
+    <meta property="og:title" content={assigns[:page_title] || "Neptuner"} />
+    <meta :if={assigns[:meta_description]} property="og:description" content={@meta_description} />
+    <meta :if={assigns[:meta_url]} property="og:url" content={@meta_url} />
+    <meta property="og:type" content={assigns[:meta_type] || "website"} />
+    <meta :if={assigns[:meta_image]} property="og:image" content={@meta_image} />
+    <meta property="og:site_name" content={Application.get_env(:neptuner, :app_name)} />
+    
 <!-- Twitter Card Meta Tags -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content={assigns[:page_title] || "Neptuner"} />
-<meta :if={assigns[:meta_description]} name="twitter:description" content={@meta_description} />
-<meta :if={assigns[:meta_image]} name="twitter:image" content={@meta_image} />
-
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={assigns[:page_title] || "Neptuner"} />
+    <meta :if={assigns[:meta_description]} name="twitter:description" content={@meta_description} />
+    <meta :if={assigns[:meta_image]} name="twitter:image" content={@meta_image} />
+    
 <!-- Article Meta Tags -->
-<meta :if={assigns[:meta_published_time]} property="article:published_time" content={@meta_published_time} />
-<meta :if={assigns[:meta_author]} property="article:author" content={@meta_author} />
-<%= if assigns[:meta_keywords] && @meta_keywords != [] do %>
-  <%= for keyword <- @meta_keywords do %>
-    <meta property="article:tag" content={keyword} />
-  <% end %>
-<% end %>
+    <meta
+      :if={assigns[:meta_published_time]}
+      property="article:published_time"
+      content={@meta_published_time}
+    />
+    <meta :if={assigns[:meta_author]} property="article:author" content={@meta_author} />
+    <%= if assigns[:meta_keywords] && @meta_keywords != [] do %>
+      <%= for keyword <- @meta_keywords do %>
+        <meta property="article:tag" content={keyword} />
+      <% end %>
+    <% end %>
 
     <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
 
@@ -65,7 +73,7 @@
       })();
     </script>
   </head>
-  <body class="bg-background text-base-content relative flex flex-col min-h-svh">
+  <body class="bg-background text-base-content relative flex flex-col min-h-svh safe-area-top safe-area-bottom">
     {@inner_content}
   </body>
 </html>

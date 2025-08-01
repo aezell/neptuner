@@ -1,0 +1,132 @@
+<Layouts.dashboard flash={@flash} current_scope={@current_scope}>
+  <div class="space-y-8">
+    <!-- Header -->
+    <div class="text-center">
+      <h1 class="text-cosmic-hero mb-4">
+        <span class="text-cosmic-gradient">Cosmic Data Export</span>
+      </h1>
+      <p class="text-cosmic-subheading">
+        Export your productivity insights across the dimensions of time and space
+      </p>
+    </div>
+    
+<!-- Export Options Grid -->
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Complete Export -->
+      <div class="bg-cosmic-gradient-subtle rounded-xl p-6 border border-cosmic-200 hover-cosmic">
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 mx-auto mb-4 bg-cosmic-gradient rounded-full flex items-center justify-center">
+            <.icon name="hero-archive-box" class="w-8 h-8 text-white" />
+          </div>
+          <h3 class="text-xl font-semibold text-cosmic-800 mb-2">Complete Universe Export</h3>
+          <p class="text-cosmic-600 text-sm">
+            Export all your productivity data across all cosmic dimensions
+          </p>
+        </div>
+
+        <form action={~p"/export/all"} method="post" class="space-y-4">
+          <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
+
+          <div class="space-y-3">
+            <label class="block text-sm font-medium text-cosmic-700">Format</label>
+            <select name="format" class="w-full p-3 border border-cosmic-300 rounded-lg bg-white">
+              <%= for format <- @available_formats do %>
+                <option value={format.key} disabled={!Map.get(format, :available, true)}>
+                  {format.name} - {format.description}
+                </option>
+              <% end %>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-sm font-medium text-cosmic-700">Start Date</label>
+              <input
+                type="date"
+                name="start_date"
+                class="w-full p-3 border border-cosmic-300 rounded-lg"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-cosmic-700">End Date</label>
+              <input
+                type="date"
+                name="end_date"
+                class="w-full p-3 border border-cosmic-300 rounded-lg"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full btn bg-cosmic-gradient hover-cosmic text-white border-0 shadow-cosmic"
+          >
+            Export Complete Universe
+          </button>
+        </form>
+      </div>
+      
+<!-- Dataset-Specific Exports -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold text-base-content">Individual Cosmic Dimensions</h3>
+
+        <%= for dataset <- @available_datasets do %>
+          <div class="bg-base-100 rounded-lg p-4 border border-base-300 hover:border-cosmic-300 transition-colors">
+            <div class="flex items-center justify-between">
+              <div class="flex-1">
+                <h4 class="font-medium text-base-content">{dataset.name}</h4>
+                <p class="text-sm text-base-500 mt-1">{dataset.description}</p>
+              </div>
+
+              <form action={~p"/export/dataset"} method="post" class="ml-4">
+                <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
+                <input type="hidden" name="dataset" value={dataset.key} />
+                <input type="hidden" name="format" value="json" />
+
+                <button
+                  type="submit"
+                  class="btn btn-sm border-cosmic-300 text-cosmic-600 hover:bg-cosmic-50"
+                >
+                  <.icon name="hero-arrow-down-tray" class="w-4 h-4 mr-1" /> Export
+                </button>
+              </form>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+<!-- Export Examples -->
+    <div class="bg-base-100 rounded-xl p-6 border border-base-300">
+      <h3 class="text-lg font-semibold text-base-content mb-4">Cosmic Export Examples</h3>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-medium text-base-content mb-2">JSON Data Structure</h4>
+          <pre class="bg-base-200 p-4 rounded-lg text-xs overflow-x-auto text-base-content">
+{@export_examples.tasks_json}
+          </pre>
+        </div>
+
+        <div>
+          <h4 class="font-medium text-base-content mb-2">Analytics Insights Include</h4>
+          <div class="bg-cosmic-gradient-subtle p-4 rounded-lg">
+            <div class="text-sm text-cosmic-700 whitespace-pre-line">
+              {@export_examples.analytics_insight}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+<!-- Cosmic Wisdom Footer -->
+    <div class="text-center py-6 border-t border-base-300">
+      <p class="text-cosmic-xs text-base-400 italic">
+        "In exporting your data, you transcend the boundaries of digital existence and achieve true cosmic portability."
+      </p>
+      <p class="text-xs text-base-400 mt-2">
+        — The Neptuner Philosophy of Universal Data Liberation
+      </p>
+    </div>
+  </div>
+</Layouts.dashboard>

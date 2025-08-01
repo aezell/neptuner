@@ -1,0 +1,209 @@
+<Layouts.dashboard flash={@flash} current_scope={@current_scope}>
+  <div class="space-y-6">
+    <.header>
+      Achievement Deflation Engine
+      <:subtitle>
+        Celebrate your digital accomplishments with the appropriate level of cosmic skepticism
+      </:subtitle>
+      <:actions>
+        <.button phx-click="check_achievements" class="btn-primary">
+          <.icon name="hero-magnifying-glass" class="w-4 h-4 mr-2" /> Check for New Achievements
+        </.button>
+      </:actions>
+    </.header>
+    
+<!-- Achievement Statistics -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="stat bg-base-100 rounded-lg shadow">
+        <div class="stat-figure text-warning">
+          <.icon name="hero-trophy" class="w-8 h-8" />
+        </div>
+        <div class="stat-title">Achievements Unlocked</div>
+        <div class="stat-value text-2xl">{@statistics.completed}</div>
+        <div class="stat-desc">of {@statistics.total_achievements} total</div>
+      </div>
+
+      <div class="stat bg-base-100 rounded-lg shadow">
+        <div class="stat-figure text-info">
+          <.icon name="hero-chart-bar" class="w-8 h-8" />
+        </div>
+        <div class="stat-title">Completion Rate</div>
+        <div class="stat-value text-2xl">{@statistics.completion_percentage}%</div>
+        <div class="stat-desc">Digital accomplishments</div>
+      </div>
+
+      <div class="stat bg-base-100 rounded-lg shadow">
+        <div class="stat-figure text-secondary">
+          <.icon name="hero-clock" class="w-8 h-8" />
+        </div>
+        <div class="stat-title">In Progress</div>
+        <div class="stat-value text-2xl">{@statistics.in_progress}</div>
+        <div class="stat-desc">Partially completed</div>
+      </div>
+    </div>
+    
+<!-- Existential Achievement Commentary -->
+    <div class="card bg-base-100 shadow-lg">
+      <div class="card-body">
+        <h2 class="card-title">
+          <.icon name="hero-face-smile" class="w-5 h-5" /> Cosmic Achievement Philosophy
+        </h2>
+        <p class="text-sm text-base-content/70">
+          Welcome to the Achievement Deflation Engine, where every digital accomplishment
+          is celebrated with the appropriate level of existential skepticism. These badges
+          represent your journey through the modern productivity landscape—a landscape where
+          checking boxes has become an art form and metrics have replaced meaning.
+        </p>
+        <div class="divider">Remember</div>
+        <p class="text-xs text-base-content/50 italic">
+          "The real achievement is realizing that achievements are just gamification
+          of being human. But hey, at least the badges are pretty."
+        </p>
+      </div>
+    </div>
+    
+<!-- Category Filters -->
+    <div class="flex flex-wrap gap-2">
+      <%= for {category, name} <- achievement_categories() do %>
+        <button
+          class={[
+            "btn btn-sm",
+            if(@filter_category == category, do: "btn-primary", else: "btn-ghost")
+          ]}
+          phx-click="filter_category"
+          phx-value-category={category}
+        >
+          {name}
+        </button>
+      <% end %>
+
+      <button
+        class={[
+          "btn btn-sm ml-4",
+          if(@show_completed_only, do: "btn-success", else: "btn-ghost")
+        ]}
+        phx-click="toggle_completed"
+      >
+        <%= if @show_completed_only do %>
+          <.icon name="hero-check-circle" class="w-4 h-4 mr-1" /> Completed Only
+        <% else %>
+          <.icon name="hero-eye" class="w-4 h-4 mr-1" /> Show All
+        <% end %>
+      </button>
+    </div>
+    
+<!-- Achievements Grid -->
+    <div class="card bg-base-100 shadow-lg">
+      <div class="card-body">
+        <h2 class="card-title">Your Digital Accomplishments</h2>
+
+        <%= if @achievements_with_progress == [] do %>
+          <div class="text-center py-8">
+            <.icon name="hero-trophy" class="w-16 h-16 mx-auto text-base-content/30 mb-4" />
+            <h3 class="text-lg font-medium text-base-content/70">No achievements found</h3>
+            <p class="text-sm text-base-content/50">
+              <%= if @filter_category == "all" do %>
+                Start using Neptuner to unlock your first achievements
+              <% else %>
+                Try different categories or check for new achievements
+              <% end %>
+            </p>
+          </div>
+        <% else %>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <%= for item <- @achievements_with_progress do %>
+              <% achievement = item.achievement %>
+              <% user_achievement = item.user_achievement %>
+              <% completed = item.completed %>
+              <% progress_value = item.progress_value %>
+
+              <div class={[
+                "card border-2 transition-all duration-200",
+                if(completed,
+                  do: "border-success bg-success/5",
+                  else: "border-base-300 hover:border-base-400"
+                )
+              ]}>
+                <div class="card-body p-4">
+                  <div class="flex items-start justify-between mb-2">
+                    <div class={[
+                      "w-10 h-10 rounded-lg flex items-center justify-center",
+                      if(completed, do: "bg-success text-success-content", else: "bg-base-200")
+                    ]}>
+                      <.icon name={achievement.icon} class="w-5 h-5" />
+                    </div>
+
+                    <%= if completed do %>
+                      <div class="badge badge-success badge-sm">Unlocked</div>
+                    <% else %>
+                      <%= if achievement.threshold_value do %>
+                        <div class="badge badge-ghost badge-sm">
+                          {progress_value}/{achievement.threshold_value}
+                        </div>
+                      <% end %>
+                    <% end %>
+                  </div>
+
+                  <h3 class={[
+                    "font-medium text-sm mb-1",
+                    if(completed, do: "text-success", else: "text-base-content")
+                  ]}>
+                    {achievement.title}
+                  </h3>
+
+                  <p class="text-xs text-base-content/60 mb-3">
+                    {achievement.description}
+                  </p>
+
+                  <%= if achievement.threshold_value && achievement.threshold_value > 0 do %>
+                    <div class="w-full bg-base-200 rounded-full h-2 mb-2">
+                      <div
+                        class={[
+                          "h-2 rounded-full transition-all duration-300",
+                          if(completed, do: "bg-success", else: "bg-primary")
+                        ]}
+                        style={"width: #{progress_percentage(progress_value, achievement.threshold_value)}%"}
+                      >
+                      </div>
+                    </div>
+                  <% end %>
+
+                  <%= if completed and achievement.ironic_description do %>
+                    <div class="collapse collapse-arrow mt-2 bg-base-200/50">
+                      <input type="checkbox" />
+                      <div class="collapse-title text-xs font-medium">
+                        Achievement Commentary
+                      </div>
+                      <div class="collapse-content">
+                        <p class="text-xs text-base-content/70 italic">
+                          {achievement.ironic_description}
+                        </p>
+                      </div>
+                    </div>
+                  <% end %>
+
+                  <div class="flex items-center justify-between mt-2">
+                    <span class={[
+                      "badge badge-sm",
+                      Neptuner.Achievements.Achievement.badge_class(achievement.color)
+                    ]}>
+                      {Neptuner.Achievements.Achievement.category_display_name(
+                        achievement.category
+                      )}
+                    </span>
+
+                    <%= if completed and user_achievement.completed_at do %>
+                      <span class="text-xs text-base-content/50">
+                        Unlocked: {Calendar.strftime(user_achievement.completed_at, "%b %d")}
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</Layouts.dashboard>

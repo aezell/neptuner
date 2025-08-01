@@ -16,23 +16,27 @@
       </nav>
 
       <div class="mb-6">
-        <h1 class="text-4xl font-bold text-base-content mb-4"><%= @post.title %></h1>
+        <h1 class="text-4xl font-bold text-base-content mb-4">{@post.title}</h1>
 
         <div class="flex items-center text-sm text-secondary-content mb-4">
           <%= if @post.author_name do %>
-            <span><%= @post.author_name %></span>
+            <span>{@post.author_name}</span>
             <span class="mx-2">•</span>
           <% end %>
-          <time><%= Calendar.strftime(@post.published_at, "%B %d, %Y") %></time>
+          <time>{Calendar.strftime(@post.published_at, "%B %d, %Y")}</time>
           <%= if @post.reading_time_minutes do %>
             <span class="mx-2">•</span>
-            <span><%= @post.reading_time_minutes %> min read</span>
+            <span>{@post.reading_time_minutes} min read</span>
           <% end %>
         </div>
       </div>
 
       <%= if @post.featured_image_url do %>
-        <img src={@post.featured_image_url} alt={@post.title} class="w-full h-64 object-cover rounded-lg mb-8" />
+        <img
+          src={@post.featured_image_url}
+          alt={@post.title}
+          class="w-full h-64 object-cover rounded-lg mb-8"
+        />
       <% end %>
     </header>
 
@@ -49,9 +53,11 @@
         <div class="flex items-center gap-4">
           <span class="text-sm text-secondary-content">Share this article:</span>
           <div class="flex gap-2">
-            <a href={"https://twitter.com/intent/tweet?url=#{url(~p"/blog/#{@post.slug}")}&text=#{@post.title}"}
-               target="_blank"
-               class="text-secondary-content hover:text-primary">
+            <a
+              href={"https://twitter.com/intent/tweet?url=#{url(~p"/blog/#{@post.slug}")}&text=#{@post.title}"}
+              target="_blank"
+              class="text-secondary-content hover:text-primary"
+            >
               <.icon name="hero-share" class="w-5 h-5" />
             </a>
           </div>

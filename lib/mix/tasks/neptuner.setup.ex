@@ -144,7 +144,10 @@ defmodule Mix.Tasks.Neptuner.Setup do
     )
 
     puts_yellow("⚠️  WARNING: Fly.io does not support Phoenix Analytics at the time of writing.")
-    puts_light_black("Only enable if you plan to deploy outside of Fly.io or can use alternative hosting.")
+
+    puts_light_black(
+      "Only enable if you plan to deploy outside of Fly.io or can use alternative hosting."
+    )
 
     Owl.IO.confirm(message: "Enable analytics tracking?")
   end
@@ -456,12 +459,13 @@ defmodule Mix.Tasks.Neptuner.Setup do
 
     # Wait for final render and stop live screen
     Owl.LiveScreen.await_render()
-    
+
     # Stop live screen to prevent duplicate output
     try do
       Owl.LiveScreen.stop()
     catch
-      _ -> :ok  # Ignore if already stopped
+      # Ignore if already stopped
+      _ -> :ok
     end
 
     # Final instructions
@@ -1147,11 +1151,11 @@ defmodule Mix.Tasks.Neptuner.Setup do
     display_multi_tenancy_config(wants_multi_tenancy)
     display_blog_config(wants_blog)
     display_payment_config(payment_processor)
-    
+
     # Display final configuration
     display_admin_config(admin_password)
     display_development_commands()
-    
+
     puts_magenta("\n🎯 Happy coding!")
   end
 
@@ -1202,7 +1206,11 @@ defmodule Mix.Tasks.Neptuner.Setup do
     if wants_multi_tenancy do
       puts_green("\n🏢 Multi-Tenancy (Organisations) configured:")
       puts_white("  • Organisation management with role-based access control")
-      puts_white("  • Three-tier authentication system (basic → org assignment → org requirement)")
+
+      puts_white(
+        "  • Three-tier authentication system (basic → org assignment → org requirement)"
+      )
+
       puts_white("  • Email-based invitation system with token validation")
       puts_white("  • Role hierarchy: owner, admin, member with different permissions")
       puts_light_black("  • Visit /organisations/new to create your first organisation")

@@ -1,0 +1,405 @@
+<Layouts.app flash={@flash} current_scope={@current_scope}>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="space-y-8">
+      <!-- Header Section -->
+      <div class="flex justify-between items-start">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Existential Meeting Analysis</h1>
+          <p class="mt-2 text-gray-600">
+            Where corporate gathering rituals meet philosophical inquiry. Most meetings are performance art.
+          </p>
+        </div>
+
+        <div class="flex gap-3">
+          <button class="btn btn-outline btn-sm" phx-click="toggle_weekly_report">
+            {if @show_weekly_report, do: "Hide", else: "Show"} Weekly Report
+          </button>
+
+          <div class="dropdown dropdown-end">
+            <label tabindex="0" class="btn btn-outline btn-sm">View</label>
+            <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+              <li>
+                <a
+                  phx-click="toggle_view"
+                  phx-value-mode="dashboard"
+                  class={if @view_mode == "dashboard", do: "active"}
+                >
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a
+                  phx-click="toggle_view"
+                  phx-value-mode="list"
+                  class={if @view_mode == "list", do: "active"}
+                >
+                  Meeting List
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+<!-- Calendar Connections Status -->
+      <%= if @calendar_connections == [] do %>
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+          <div class="flex items-start">
+            <.icon name="hero-exclamation-triangle" class="w-6 h-6 text-yellow-600 mt-1" />
+            <div class="ml-3">
+              <h3 class="text-lg font-medium text-yellow-800">No Calendar Connected</h3>
+              <p class="mt-2 text-sm text-yellow-700">
+                Connect your Google Calendar or Outlook to automatically sync meetings and unlock
+                the full existential analysis experience.
+              </p>
+              <div class="mt-4">
+                <.link navigate={~p"/connections"} class="btn btn-warning btn-sm">
+                  Connect Calendar
+                </.link>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% else %>
+        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <.icon name="hero-check-circle" class="w-5 h-5 text-green-600" />
+              <span class="ml-2 text-sm text-green-700">
+                {length(@calendar_connections)} calendar connection(s) active
+              </span>
+            </div>
+            <div class="flex gap-2">
+              <%= for connection <- @calendar_connections do %>
+                <button
+                  class="btn btn-xs btn-success"
+                  phx-click="sync_calendar"
+                  phx-value-connection_id={connection.id}
+                >
+                  Sync {String.capitalize(to_string(connection.provider))}
+                </button>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <%= if @view_mode == "dashboard" do %>
+        <!-- Statistics Dashboard -->
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div class="bg-white p-4 rounded-lg shadow border">
+            <div class="text-2xl font-bold text-gray-900">{@stats.total_meetings}</div>
+            <div class="text-sm text-gray-500">Total Meetings</div>
+          </div>
+
+          <div class="bg-red-50 p-4 rounded-lg shadow border border-red-200">
+            <div class="text-2xl font-bold text-red-700">
+              {@stats.could_have_been_email_percentage}%
+            </div>
+            <div class="text-sm text-red-600">Could've Been Email</div>
+          </div>
+
+          <div class="bg-blue-50 p-4 rounded-lg shadow border border-blue-200">
+            <div class="text-2xl font-bold text-blue-700">{@stats.total_hours_in_meetings}</div>
+            <div class="text-sm text-blue-600">Total Hours</div>
+          </div>
+
+          <div class="bg-green-50 p-4 rounded-lg shadow border border-green-200">
+            <div class="text-2xl font-bold text-green-700">
+              {if @stats.average_productivity_score,
+                do: @stats.average_productivity_score,
+                else: "—"}
+            </div>
+            <div class="text-sm text-green-600">Avg Productivity Score</div>
+          </div>
+
+          <div class="bg-yellow-50 p-4 rounded-lg shadow border border-yellow-200">
+            <div class="text-2xl font-bold text-yellow-700">{@stats.unrated_meetings}</div>
+            <div class="text-sm text-yellow-600">Unrated Meetings</div>
+          </div>
+
+          <div class="bg-purple-50 p-4 rounded-lg shadow border border-purple-200">
+            <div class="text-2xl font-bold text-purple-700">{@stats.standup_meetings}</div>
+            <div class="text-sm text-purple-600">Standup Meetings</div>
+          </div>
+        </div>
+        
+<!-- Meeting Type Breakdown -->
+        <div class="bg-white p-6 rounded-lg shadow border">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Meeting Type Distribution</h3>
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div class="text-center">
+              <div class="text-xl font-bold text-yellow-600">{@stats.standup_meetings}</div>
+              <div class="text-xs text-gray-500">Daily Rituals</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-bold text-red-600">{@stats.all_hands_meetings}</div>
+              <div class="text-xs text-gray-500">Mass Gatherings</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-bold text-blue-600">{@stats.one_on_one_meetings}</div>
+              <div class="text-xs text-gray-500">Bilateral Checks</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-bold text-green-600">{@stats.brainstorm_meetings}</div>
+              <div class="text-xs text-gray-500">Idea Generation</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-bold text-gray-600">{@stats.status_update_meetings}</div>
+              <div class="text-xs text-gray-500">Status Reports</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-bold text-gray-400">{@stats.other_meetings}</div>
+              <div class="text-xs text-gray-500">Unclassified</div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      
+<!-- Weekly Report Panel -->
+      <%= if @show_weekly_report do %>
+        <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-6">
+          <h3 class="text-lg font-semibold text-indigo-800 mb-3">Weekly Meeting Reality Check</h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <div class="bg-white p-3 rounded">
+              <div class="text-lg font-bold text-indigo-700">{@weekly_report.week_meetings}</div>
+              <div class="text-sm text-indigo-600">Meetings This Week</div>
+            </div>
+            <div class="bg-white p-3 rounded">
+              <div class="text-lg font-bold text-indigo-700">{@weekly_report.week_hours}h</div>
+              <div class="text-sm text-indigo-600">Hours in Meetings</div>
+            </div>
+            <div class="bg-white p-3 rounded">
+              <div class="text-lg font-bold text-indigo-700">
+                {@weekly_report.week_could_have_been_email}%
+              </div>
+              <div class="text-sm text-indigo-600">Email-Worthy</div>
+            </div>
+            <div class="bg-white p-3 rounded">
+              <div class="text-lg font-bold text-indigo-700">
+                {@weekly_report.collective_human_hours_lost}h
+              </div>
+              <div class="text-sm text-indigo-600">Collective Hours Lost</div>
+            </div>
+          </div>
+
+          <div class="space-y-3 text-sm">
+            <%= if @weekly_report.week_could_have_been_email > 60 do %>
+              <div class="bg-red-100 p-3 rounded border border-red-300">
+                <p class="text-red-800 font-medium">
+                  🚨 Meeting Overload Alert: Over 60% of your meetings could have been emails.
+                  You're living in a dystopian corporate novel. The collective human hours lost
+                  this week ({@weekly_report.collective_human_hours_lost}h) could have funded a small art project.
+                </p>
+              </div>
+            <% else %>
+              <div class="bg-green-100 p-3 rounded border border-green-300">
+                <p class="text-green-800 font-medium">
+                  ✨ Meeting Efficiency: You're maintaining reasonable meeting hygiene.
+                  Only {@weekly_report.week_could_have_been_email}% of meetings were email-worthy.
+                  The universe notices your restraint.
+                </p>
+              </div>
+            <% end %>
+
+            <p class="text-xs text-indigo-600 italic">
+              Remember: Every meeting is a choice between human connection and asynchronous efficiency.
+              Choose wisely.
+            </p>
+          </div>
+        </div>
+      <% end %>
+      
+<!-- Filters -->
+      <div class="flex flex-wrap gap-4 items-center bg-white p-4 rounded-lg shadow border">
+        <div class="flex items-center gap-2">
+          <label class="text-sm font-medium text-gray-700">Meeting Type:</label>
+          <select class="select select-sm select-bordered" phx-change="filter_type" name="type">
+            <option value="all" selected={@filter_type == "all"}>All Types</option>
+            <option value="unrated" selected={@filter_type == "unrated"}>Unrated</option>
+            <option value="standup" selected={@filter_type == "standup"}>Standup</option>
+            <option value="all_hands" selected={@filter_type == "all_hands"}>All Hands</option>
+            <option value="one_on_one" selected={@filter_type == "one_on_one"}>1:1</option>
+            <option value="brainstorm" selected={@filter_type == "brainstorm"}>Brainstorm</option>
+            <option value="status_update" selected={@filter_type == "status_update"}>
+              Status Update
+            </option>
+            <option value="other" selected={@filter_type == "other"}>Other</option>
+          </select>
+        </div>
+      </div>
+      
+<!-- Meetings List -->
+      <div class="bg-white rounded-lg shadow border">
+        <div id="meetings" phx-update="stream" class="divide-y divide-gray-200">
+          <div class="hidden only:block p-8 text-center text-gray-500">
+            <div class="text-lg font-medium">No meetings yet</div>
+            <p class="mt-1 text-sm">
+              Either you've achieved the dream of a meeting-free existence or your calendar
+              connections need attention. Check your calendar sync status above.
+            </p>
+          </div>
+
+          <div
+            :for={{id, meeting} <- @streams.meetings}
+            id={id}
+            class={"p-6 hover:bg-gray-50 " <> meeting_urgency_class(meeting)}
+          >
+            <div class="flex items-start justify-between">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-3 mb-2">
+                  <h3 class="text-lg font-semibold text-gray-900 truncate">
+                    {meeting.title}
+                  </h3>
+
+                  <div class={"badge badge-sm " <> type_badge_class(meeting.meeting_type)}>
+                    {format_meeting_type(meeting.meeting_type)}
+                  </div>
+
+                  <%= if meeting.could_have_been_email do %>
+                    <div class="badge badge-sm badge-error">
+                      📧 Email-Worthy
+                    </div>
+                  <% end %>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-3 text-sm">
+                  <div class="flex items-center gap-2">
+                    <span class="text-gray-500">When:</span>
+                    <span class="text-gray-700">{format_datetime(meeting.scheduled_at)}</span>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <span class="text-gray-500">Duration:</span>
+                    <span class="text-gray-700">{format_duration(meeting.duration_minutes)}</span>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <span class="text-gray-500">Attendees:</span>
+                    <span class="text-gray-700">{meeting.attendee_count}</span>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <span class="text-gray-500">Productivity:</span>
+                    <span class={productivity_color(meeting.actual_productivity_score)}>
+                      {if meeting.actual_productivity_score,
+                        do: "#{meeting.actual_productivity_score}/10",
+                        else: "Unrated"}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 p-3 rounded-lg">
+                  <p class="text-xs text-gray-600 italic">
+                    Existential insight: {get_existential_insight(meeting)}
+                  </p>
+                  <%= if meeting.actual_productivity_score do %>
+                    <p class="text-xs text-gray-500 mt-1">
+                      "{Meeting.productivity_score_description(meeting.actual_productivity_score)}"
+                    </p>
+                  <% end %>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 ml-6">
+                <%= if meeting.actual_productivity_score == nil do %>
+                  <button
+                    class="btn btn-xs btn-primary"
+                    phx-click="start_rating"
+                    phx-value-id={meeting.id}
+                  >
+                    Rate
+                  </button>
+                <% end %>
+
+                <div class="form-control">
+                  <label class="label cursor-pointer gap-2">
+                    <span class="label-text text-xs">Email?</span>
+                    <input
+                      type="checkbox"
+                      class="checkbox checkbox-xs"
+                      checked={meeting.could_have_been_email}
+                      phx-click="mark_could_have_been_email"
+                      phx-value-id={meeting.id}
+                      phx-value-value={
+                        if meeting.could_have_been_email, do: "false", else: "true"
+                      }
+                    />
+                  </label>
+                </div>
+
+                <button
+                  class="btn btn-xs btn-error btn-outline"
+                  phx-click="delete_meeting"
+                  phx-value-id={meeting.id}
+                  data-confirm="Delete this meeting record?"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+<!-- Meeting Rating Modal -->
+  <%= if @rating_meeting do %>
+    <div class="fixed inset-0 z-50 overflow-y-auto">
+      <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+        <div
+          class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+          phx-click="cancel_rating"
+        >
+        </div>
+
+        <div class="inline-block w-full max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg">
+          <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">
+            Rate Meeting Productivity
+          </h3>
+
+          <div class="mb-4">
+            <h4 class="font-medium text-gray-800">{@rating_meeting.title}</h4>
+            <p class="text-sm text-gray-600">
+              {format_datetime(@rating_meeting.scheduled_at)} • {format_duration(
+                @rating_meeting.duration_minutes
+              )}
+            </p>
+          </div>
+
+          <div class="space-y-3">
+            <p class="text-sm text-gray-700">
+              How productive was this meeting on a scale of 1-10?
+            </p>
+
+            <div class="grid grid-cols-5 gap-2">
+              <%= for score <- 1..10 do %>
+                <button
+                  class={"btn btn-sm " <> if(score <= 3, do: "btn-error", else: if(score <= 6, do: "btn-warning", else: "btn-success"))}
+                  phx-click="submit_rating"
+                  phx-value-score={score}
+                >
+                  {score}
+                </button>
+              <% end %>
+            </div>
+
+            <div class="text-xs text-gray-500 space-y-1">
+              <div><strong>1-3:</strong> Pure theater, no outcomes</div>
+              <div><strong>4-6:</strong> Some progress despite the format</div>
+              <div><strong>7-10:</strong> Genuinely productive gathering</div>
+            </div>
+          </div>
+
+          <div class="flex justify-end gap-3 pt-4">
+            <button type="button" class="btn btn-outline" phx-click="cancel_rating">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</Layouts.app>

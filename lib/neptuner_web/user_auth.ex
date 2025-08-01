@@ -4,7 +4,7 @@ defmodule NeptunerWeb.UserAuth do
   import Plug.Conn
   import Phoenix.Controller
 
-  alias Neptuner.{Accounts, Organisations}
+  alias Neptuner.{Accounts, Organisations, Onboarding}
   alias Neptuner.Accounts.Scope
 
   # Make the remember me cookie valid for 14 days. This should match
@@ -330,6 +330,25 @@ defmodule NeptunerWeb.UserAuth do
     end
   end
 
+  def on_mount(:redirect_if_onboarding_needed, _params, _session, socket) do
+    case socket.assigns.current_scope do
+      %{user: user} when not is_nil(user) ->
+        if Onboarding.needs_onboarding?(user) do
+          socket =
+            socket
+            |> Phoenix.LiveView.put_flash(:info, "Let's complete your cosmic setup first!")
+            |> Phoenix.LiveView.redirect(to: ~p"/onboarding")
+
+          {:halt, socket}
+        else
+          {:cont, socket}
+        end
+
+      _ ->
+        {:cont, socket}
+    end
+  end
+
   defp mount_current_scope(socket, session) do
     Phoenix.Component.assign_new(socket, :current_scope, fn ->
       {user, _} =
@@ -345,6 +364,15 @@ defmodule NeptunerWeb.UserAuth do
   # the user was already logged in, redirect to settings
   def signed_in_path(%Plug.Conn{assigns: %{current_scope: %Scope{user: %Accounts.User{}}}}) do
     ~p"/users/settings"
+  end
+
+  def signed_in_path(%Plug.Conn{assigns: %{current_scope: %Scope{user: user}}})
+      when not is_nil(user) do
+    if Onboarding.needs_onboarding?(user) do
+      ~p"/onboarding"
+    else
+      ~p"/dashboard"
+    end
   end
 
   def signed_in_path(_), do: ~p"/dashboard"

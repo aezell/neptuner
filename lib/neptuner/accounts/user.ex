@@ -4,6 +4,11 @@ defmodule Neptuner.Accounts.User do
 
   alias Neptuner.Organisations.Organisation
   alias Neptuner.Organisations.OrganisationMember
+  alias Neptuner.Tasks.Task
+  alias Neptuner.Habits.Habit
+  alias Neptuner.Connections.ServiceConnection
+  alias Neptuner.Calendar.Meeting
+  alias Neptuner.Achievements.UserAchievement
 
   schema "users" do
     field :email, :string
@@ -16,6 +21,56 @@ defmodule Neptuner.Accounts.User do
 
     field :is_oauth_user, :boolean, default: false
     field :oauth_provider, :string
+
+    # Neptuner-specific fields
+    field :cosmic_perspective_level, Ecto.Enum,
+      values: [:skeptical, :resigned, :enlightened],
+      default: :skeptical
+
+    field :total_meaningless_tasks_completed, :integer, default: 0
+
+    # Subscription fields
+    field :subscription_tier, Ecto.Enum,
+      values: [:free, :cosmic_enlightenment, :enterprise],
+      default: :free
+
+    field :subscription_status, Ecto.Enum,
+      values: [:active, :cancelled, :expired, :trial],
+      default: :active
+
+    field :subscription_expires_at, :utc_datetime
+    field :lemonsqueezy_customer_id, :string
+    field :subscription_features, :map, default: %{}
+
+    # Onboarding fields
+    field :onboarding_completed, :boolean, default: false
+
+    field :onboarding_step, Ecto.Enum,
+      values: [
+        :welcome,
+        :cosmic_setup,
+        :demo_data,
+        :first_connection,
+        :first_task,
+        :dashboard_tour,
+        :completed
+      ],
+      default: :welcome
+
+    field :demo_data_generated, :boolean, default: false
+    field :first_task_created, :boolean, default: false
+    field :first_connection_made, :boolean, default: false
+    field :dashboard_tour_completed, :boolean, default: false
+    field :onboarding_started_at, :utc_datetime
+    field :onboarding_completed_at, :utc_datetime
+    field :activation_score, :integer, default: 0
+
+    # Neptuner relationships
+    has_many :tasks, Task, on_delete: :delete_all
+    has_many :habits, Habit, on_delete: :delete_all
+    has_many :service_connections, ServiceConnection, on_delete: :delete_all
+    has_many :meetings, Meeting, on_delete: :delete_all
+    has_many :user_achievements, UserAchievement, on_delete: :delete_all
 
     timestamps(type: :utc_datetime)
   end
@@ -133,6 +188,110 @@ defmodule Neptuner.Accounts.User do
   def confirm_changeset(user) do
     now = DateTime.utc_now(:second)
     change(user, confirmed_at: now)
+  end
+
+  @doc """
+  A user changeset for updating subscription information.
+  """
+  def subscription_changeset(user, attrs) do
+    user
+    |> cast(attrs, [
+      :subscription_tier,
+      :subscription_status,
+      :subscription_expires_at,
+      :lemonsqueezy_customer_id,
+      :subscription_features
+    ])
+    |> validate_inclusion(:subscription_tier, [:free, :cosmic_enlightenment, :enterprise])
+    |> validate_inclusion(:subscription_status, [:active, :cancelled, :expired, :trial])
+  end
+
+  @doc """
+  A user changeset for updating onboarding progress.
+  """
+  def onboarding_changeset(user, attrs) do
+    user
+    |> cast(attrs, [
+      :onboarding_completed,
+      :onboarding_step,
+      :demo_data_generated,
+      :first_task_created,
+      :first_connection_made,
+      :dashboard_tour_completed,
+      :onboarding_started_at,
+      :onboarding_completed_at,
+      :activation_score,
+      :cosmic_perspective_level
+    ])
+    |> validate_inclusion(:onboarding_step, [
+      :welcome,
+      :cosmic_setup,
+      :demo_data,
+      :first_connection,
+      :first_task,
+      :dashboard_tour,
+      :completed
+    ])
+    |> validate_inclusion(:cosmic_perspective_level, [:skeptical, :resigned, :enlightened])
+    |> maybe_set_onboarding_timestamps()
+  end
+
+  defp maybe_set_onboarding_timestamps(changeset) do
+    now = DateTime.utc_now()
+
+    changeset =
+      if get_field(changeset, :onboarding_started_at) == nil and
+           get_change(changeset, :onboarding_step) do
+        put_change(changeset, :onboarding_started_at, now)
+      else
+        changeset
+      end
+
+    if get_change(changeset, :onboarding_completed) == true and
+         get_field(changeset, :onboarding_completed_at) == nil do
+      put_change(changeset, :onboarding_completed_at, now)
+    else
+      changeset
+    end
+  end
+
+  @doc """
+  General changeset for user updates including subscription fields.
+  """
+  def changeset(user, attrs) do
+    user
+    |> cast(attrs, [
+      :email,
+      :cosmic_perspective_level,
+      :total_meaningless_tasks_completed,
+      :subscription_tier,
+      :subscription_status,
+      :subscription_expires_at,
+      :lemonsqueezy_customer_id,
+      :subscription_features,
+      :onboarding_completed,
+      :onboarding_step,
+      :demo_data_generated,
+      :first_task_created,
+      :first_connection_made,
+      :dashboard_tour_completed,
+      :onboarding_started_at,
+      :onboarding_completed_at,
+      :activation_score
+    ])
+    |> validate_email([])
+    |> validate_inclusion(:cosmic_perspective_level, [:skeptical, :resigned, :enlightened])
+    |> validate_inclusion(:subscription_tier, [:free, :cosmic_enlightenment, :enterprise])
+    |> validate_inclusion(:subscription_status, [:active, :cancelled, :expired, :trial])
+    |> validate_inclusion(:onboarding_step, [
+      :welcome,
+      :cosmic_setup,
+      :demo_data,
+      :first_connection,
+      :first_task,
+      :dashboard_tour,
+      :completed
+    ])
   end
 
   @doc """

@@ -1,0 +1,314 @@
+<Layouts.app flash={@flash} current_scope={@current_scope}>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="space-y-8">
+      <!-- Mobile-optimized Header Section -->
+      <div class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start">
+        <div class="flex-1">
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Existential Habit Tracking</h1>
+          <p class="mt-2 text-sm sm:text-base text-gray-600">
+            Where daily routines meet the absurdity of human optimization. Most of this is theater, but some might help.
+          </p>
+        </div>
+
+        <div class="flex gap-2 sm:gap-3 flex-wrap">
+          <button class="btn btn-outline btn-sm flex-1 sm:flex-none min-h-[44px]" phx-click="toggle_insights">
+            <span class="text-xs sm:text-sm">
+              {if @show_insights, do: "Hide", else: "Show"} Insights
+            </span>
+          </button>
+
+          <.link patch={~p"/habits/new"} class="btn btn-primary btn-sm flex-1 sm:flex-none min-h-[44px]">
+            <span class="text-xs sm:text-sm">Add Habit</span>
+          </.link>
+        </div>
+      </div>
+      
+<!-- Mobile-optimized Statistics Dashboard -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 lg:gap-4">
+        <div class="bg-white p-3 sm:p-4 rounded-lg shadow border">
+          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">{@stats.total_habits}</div>
+          <div class="text-xs sm:text-sm text-gray-500">Total Habits</div>
+        </div>
+
+        <div class="bg-green-50 p-3 sm:p-4 rounded-lg shadow border border-green-200">
+          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-green-700">{@stats.active_streaks}</div>
+          <div class="text-xs sm:text-sm text-green-600">Active Streaks</div>
+        </div>
+
+        <div class="bg-blue-50 p-3 sm:p-4 rounded-lg shadow border border-blue-200">
+          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-blue-700">{@stats.total_current_streak}</div>
+          <div class="text-xs sm:text-sm text-blue-600">Combined Days</div>
+        </div>
+
+        <div class="bg-purple-50 p-3 sm:p-4 rounded-lg shadow border border-purple-200">
+          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-purple-700">{@stats.longest_overall_streak}</div>
+          <div class="text-xs sm:text-sm text-purple-600">Longest Streak</div>
+        </div>
+
+        <div class="bg-yellow-50 p-3 sm:p-4 rounded-lg shadow border border-yellow-200 col-span-2 sm:col-span-1">
+          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-yellow-700">{@stats.self_improvement_theater}</div>
+          <div class="text-xs sm:text-sm text-yellow-600">Theater Habits</div>
+        </div>
+
+        <div class="bg-cyan-50 p-4 rounded-lg shadow border border-cyan-200">
+          <div class="text-2xl font-bold text-cyan-700">{@stats.actually_useful}</div>
+          <div class="text-sm text-cyan-600">Actually Useful</div>
+        </div>
+      </div>
+      
+<!-- Existential Insights Panel -->
+      <%= if @show_insights do %>
+        <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-6">
+          <h3 class="text-lg font-semibold text-indigo-800 mb-3">Existential Habit Analysis</h3>
+
+          <div class="space-y-3 text-sm">
+            <%= if @stats.self_improvement_theater > @stats.actually_useful + @stats.basic_human_functions do %>
+              <div class="bg-yellow-100 p-3 rounded border border-yellow-300">
+                <p class="text-yellow-800 font-medium">
+                  🎭 Performance Alert: You're investing more energy in self-improvement theater
+                  than in basic human maintenance or genuinely useful activities. This is either
+                  profound self-awareness or elaborate procrastination. Possibly both.
+                </p>
+              </div>
+            <% else %>
+              <div class="bg-green-100 p-3 rounded border border-green-300">
+                <p class="text-green-800 font-medium">
+                  ✨ Existential Balance: You're focusing on fundamental human needs and practical skills.
+                  This suggests either genuine wisdom or accidental competence. Either way, well done.
+                </p>
+              </div>
+            <% end %>
+
+            <%= if @stats.longest_overall_streak > 100 do %>
+              <div class="bg-purple-100 p-3 rounded border border-purple-300">
+                <p class="text-purple-800 font-medium">
+                  🏆 Persistence Paradox: Your longest streak exceeds 100 days. You've either discovered
+                  the secret to human consistency or you're exceptionally good at lying to yourself.
+                  The universe respects both approaches.
+                </p>
+              </div>
+            <% end %>
+
+            <p class="text-xs text-indigo-600 italic">
+              Remember: Every habit is a rebellion against entropy. Even the pointless ones have a certain dignity.
+            </p>
+          </div>
+        </div>
+      <% end %>
+      
+<!-- Filters -->
+      <div class="flex flex-wrap gap-4 items-center bg-white p-4 rounded-lg shadow border">
+        <div class="flex items-center gap-2">
+          <label class="text-sm font-medium text-gray-700">Habit Type:</label>
+          <select class="select select-sm select-bordered" phx-change="filter_type" name="type">
+            <option value="all" selected={@filter_type == "all"}>All Types</option>
+            <option value="basic_human_function" selected={@filter_type == "basic_human_function"}>
+              Basic Functions
+            </option>
+            <option
+              value="self_improvement_theater"
+              selected={@filter_type == "self_improvement_theater"}
+            >
+              Theater
+            </option>
+            <option value="actually_useful" selected={@filter_type == "actually_useful"}>
+              Actually Useful
+            </option>
+          </select>
+        </div>
+      </div>
+      
+<!-- Habits List -->
+      <div class="bg-white rounded-lg shadow border">
+        <div id="habits" phx-update="stream" class="divide-y divide-gray-200">
+          <div class="hidden only:block p-8 text-center text-gray-500">
+            <div class="text-lg font-medium">No habits yet</div>
+            <p class="mt-1 text-sm">
+              The void of habit formation awaits your first attempt at systematic self-improvement.
+              Or basic human maintenance. Your choice.
+            </p>
+          </div>
+
+          <div :for={{id, habit} <- @streams.habits} id={id} class="p-6 hover:bg-gray-50">
+            <div class="flex items-start justify-between">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-3 mb-3">
+                  <h3 class="text-xl font-semibold text-gray-900">
+                    {habit.name}
+                  </h3>
+
+                  <div class={"badge badge-sm " <> type_badge_class(habit.habit_type)}>
+                    {format_habit_type(habit.habit_type)}
+                  </div>
+
+                  <%= if habit.checked_in_today do %>
+                    <div class="badge badge-sm badge-success">
+                      ✓ Done Today
+                    </div>
+                  <% end %>
+                </div>
+
+                <%= if habit.description do %>
+                  <p class="text-gray-600 mb-3">{habit.description}</p>
+                <% end %>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm text-gray-500">Current Streak:</span>
+                    <span class={"text-lg font-semibold " <> streak_color(habit.current_streak)}>
+                      {habit.current_streak} days
+                    </span>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm text-gray-500">Best Streak:</span>
+                    <span class="text-lg font-semibold text-purple-600">
+                      {habit.longest_streak} days
+                    </span>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm text-gray-500">Last Entry:</span>
+                    <span class="text-sm text-gray-600">
+                      <%= case days_since_last_entry(habit) do %>
+                        <% 0 -> %>
+                          Today
+                        <% 1 -> %>
+                          Yesterday
+                        <% "∞" -> %>
+                          Never
+                        <% days -> %>
+                          {days} days ago
+                      <% end %>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 p-3 rounded-lg">
+                  <p class="text-xs text-gray-600 italic">
+                    Latest existential commentary: "{get_latest_commentary(habit)}"
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 ml-6">
+                <%= if not habit.checked_in_today do %>
+                  <button
+                    class="btn btn-sm btn-success"
+                    phx-click="check_in_habit"
+                    phx-value-id={habit.id}
+                  >
+                    Check In
+                  </button>
+                <% else %>
+                  <div class="text-sm text-green-600 font-medium">
+                    ✓ Completed
+                  </div>
+                <% end %>
+
+                <.link patch={~p"/habits/#{habit}/edit"} class="btn btn-sm btn-outline">
+                  Edit
+                </.link>
+
+                <button
+                  class="btn btn-sm btn-error btn-outline"
+                  phx-click="delete_habit"
+                  phx-value-id={habit.id}
+                  data-confirm="Delete this habit? Your streak data will be lost to the void."
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+<!-- Habit Form Modal -->
+  <%= if @live_action in [:new, :edit] do %>
+    <div class="fixed inset-0 z-50 overflow-y-auto">
+      <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+        <div
+          class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+          phx-click={JS.patch(~p"/habits")}
+        >
+        </div>
+
+        <div class="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg">
+          <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">
+            {if @live_action == :new, do: "Add New Habit", else: "Edit Habit"}
+          </h3>
+
+          <.form
+            for={@form}
+            id="habit-form"
+            phx-change="validate_habit"
+            phx-submit="save_habit"
+            class="space-y-4"
+          >
+            <div>
+              <.input
+                field={@form[:name]}
+                type="text"
+                label="Habit Name"
+                placeholder="What will you pretend to do consistently?"
+                phx-blur="suggest_habit_type"
+                required
+              />
+            </div>
+
+            <div>
+              <.input
+                field={@form[:description]}
+                type="textarea"
+                label="Description"
+                placeholder="Elaborate on the illusion (optional)"
+                rows="3"
+              />
+            </div>
+
+            <div>
+              <.input
+                field={@form[:habit_type]}
+                type="select"
+                label="Existential Category"
+                options={[
+                  {"Basic Human Function", :basic_human_function},
+                  {"Self-Improvement Theater", :self_improvement_theater},
+                  {"Actually Useful", :actually_useful}
+                ]}
+                required
+              />
+              <div class="mt-2 space-y-1 text-xs text-gray-500">
+                <div>
+                  <strong>Basic Function:</strong>
+                  Essential activities that keep you alive and functional
+                </div>
+                <div>
+                  <strong>Theater:</strong>
+                  Activities that feel productive but mostly exist to make you feel better
+                </div>
+                <div>
+                  <strong>Actually Useful:</strong>
+                  Genuinely beneficial practices with measurable positive impact
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4">
+              <button type="button" class="btn btn-outline" phx-click={JS.patch(~p"/habits")}>
+                Cancel
+              </button>
+
+              <button type="submit" class="btn btn-primary">
+                {if @live_action == :new, do: "Create Habit", else: "Update Habit"}
+              </button>
+            </div>
+          </.form>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</Layouts.app>
