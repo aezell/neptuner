@@ -181,7 +181,7 @@ defmodule Neptuner.Onboarding do
 
       # Create habits and some entries
       Enum.each(demo_habits, fn habit_attrs ->
-        case Habits.create_habit(user, habit_attrs) do
+        case Habits.create_habit(user.id, habit_attrs) do
           {:ok, habit} ->
             # Create some habit entries for streaks
             if habit_attrs.current_streak > 0 do
@@ -210,7 +210,7 @@ defmodule Neptuner.Onboarding do
       entry_date = Date.add(today, -days_ago)
       commentary = generate_existential_commentary(habit.name, days_ago)
 
-      Habits.create_habit_entry(habit, %{
+      Habits.create_habit_entry(habit.id, %{
         completed_on: entry_date,
         existential_commentary: commentary
       })
@@ -252,14 +252,19 @@ defmodule Neptuner.Onboarding do
     ]
 
     Enum.each(achievements_to_grant, fn {achievement_key, progress_value} ->
-      case Achievements.create_or_update_user_achievement(
-             user.id,
-             achievement_key,
-             progress_value
-           ) do
-        {:ok, _user_achievement} -> :ok
-        # Ignore errors for demo achievements
-        {:error, _} -> :ok
+      try do
+        case Achievements.create_or_update_user_achievement(
+               user.id,
+               achievement_key,
+               progress_value
+             ) do
+          {:ok, _user_achievement} -> :ok
+          # Ignore errors for demo achievements
+          {:error, _} -> :ok
+        end
+      rescue
+        # Handle case where achievement doesn't exist yet
+        Ecto.NoResultsError -> :ok
       end
     end)
   end
