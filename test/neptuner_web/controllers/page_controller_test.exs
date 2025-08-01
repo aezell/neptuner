@@ -3,6 +3,6 @@ defmodule NeptunerWeb.PageControllerTest do
 
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/")
-    assert html_response(conn, 200) =~ "File storage that doesn't break"
+    assert html_response(conn, 200) =~ "Cosmic Perspective on Productivity"
   end
 end

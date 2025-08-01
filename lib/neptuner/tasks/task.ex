@@ -15,6 +15,7 @@ defmodule Neptuner.Tasks.Task do
     field :status, Ecto.Enum, values: [:pending, :completed, :abandoned_wisely], default: :pending
     field :estimated_actual_importance, :integer, default: 1
     field :completed_at, :utc_datetime
+    field :due_date, :date
 
     belongs_to :user, User
 
@@ -29,7 +30,8 @@ defmodule Neptuner.Tasks.Task do
       :cosmic_priority,
       :status,
       :estimated_actual_importance,
-      :completed_at
+      :completed_at,
+      :due_date
     ])
     |> validate_required([:title])
     |> validate_length(:title, min: 1, max: 255)

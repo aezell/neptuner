@@ -443,13 +443,14 @@ defmodule Neptuner.Integrations.ImportTools do
       end
 
     priority = extract_notion_priority(properties)
-    _due_date = extract_notion_due_date(properties)
+    due_date = extract_notion_due_date(properties)
     completed = extract_notion_completion_status(properties)
 
     %{
       title: title,
       description: description,
       cosmic_priority: priority,
+      due_date: due_date,
       status: if(completed, do: :completed, else: :pending)
     }
   end
@@ -470,13 +471,14 @@ defmodule Neptuner.Integrations.ImportTools do
         _ -> ""
       end
 
-    _frequency = extract_notion_frequency(properties)
+    frequency = extract_notion_frequency(properties)
     category = extract_notion_habit_category(properties)
 
     %{
       name: name,
       description: description,
-      habit_type: category
+      habit_type: category,
+      frequency: frequency
     }
   end
 

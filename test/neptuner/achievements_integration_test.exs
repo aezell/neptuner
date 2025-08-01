@@ -60,7 +60,7 @@ defmodule Neptuner.AchievementsIntegrationTest do
     test "multiple users progressing on same achievement" do
       user1 = insert(:user)
       user2 = insert(:user)
-      achievement = insert(:achievement, 
+      _achievement = insert(:achievement, 
         key: "shared_achievement",
         threshold_value: 5
       )
@@ -205,7 +205,7 @@ defmodule Neptuner.AchievementsIntegrationTest do
   describe "edge cases and error handling" do
     test "handles concurrent updates to same user achievement" do
       user = insert(:user)
-      achievement = insert(:achievement, key: "concurrent_test", threshold_value: 10)
+      _achievement = insert(:achievement, key: "concurrent_test", threshold_value: 10)
 
       # Create initial user achievement
       {:ok, _} = Achievements.create_or_update_user_achievement(user.id, "concurrent_test", 5)
@@ -236,7 +236,7 @@ defmodule Neptuner.AchievementsIntegrationTest do
     end
 
     test "handles user that doesn't exist" do
-      achievement = insert(:achievement, key: "test_key")
+      _achievement = insert(:achievement, key: "test_key")
       
       # This will fail with a foreign key constraint error due to invalid user_id
       invalid_user_id = Ecto.UUID.generate()

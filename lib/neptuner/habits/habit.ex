@@ -15,6 +15,10 @@ defmodule Neptuner.Habits.Habit do
       values: [:basic_human_function, :self_improvement_theater, :actually_useful],
       default: :self_improvement_theater
 
+    field :frequency, Ecto.Enum,
+      values: [:daily, :weekly, :monthly],
+      default: :daily
+
     belongs_to :user, User
     has_many :habit_entries, HabitEntry, on_delete: :delete_all
 
@@ -23,7 +27,7 @@ defmodule Neptuner.Habits.Habit do
 
   def changeset(habit, attrs) do
     habit
-    |> cast(attrs, [:name, :description, :habit_type, :current_streak, :longest_streak])
+    |> cast(attrs, [:name, :description, :habit_type, :frequency, :current_streak, :longest_streak])
     |> validate_required([:name])
     |> validate_length(:name, min: 1, max: 255)
     |> validate_length(:description, max: 1000)

@@ -2,7 +2,7 @@ defmodule Neptuner.AchievementsTest do
   use Neptuner.DataCase
 
   alias Neptuner.Achievements
-  alias Neptuner.Achievements.{Achievement, UserAchievement}
+  alias Neptuner.Achievements.Achievement
 
   describe "list_achievements/1" do
     test "returns all active achievements by default" do
@@ -32,9 +32,9 @@ defmodule Neptuner.AchievementsTest do
     end
 
     test "orders by category and title" do
-      z_achievement = insert(:achievement, category: "tasks", title: "Z Achievement")
-      a_achievement = insert(:achievement, category: "tasks", title: "A Achievement")
-      habit_achievement = insert(:achievement, category: "habits", title: "Habit")
+      _z_achievement = insert(:achievement, category: "tasks", title: "Z Achievement")
+      _a_achievement = insert(:achievement, category: "tasks", title: "A Achievement")
+      _habit_achievement = insert(:achievement, category: "habits", title: "Habit")
 
       achievements = Achievements.list_achievements()
       titles = Enum.map(achievements, & &1.title)
@@ -268,7 +268,7 @@ defmodule Neptuner.AchievementsTest do
   describe "create_or_update_user_achievement/3" do
     test "creates new user achievement when none exists" do
       user = insert(:user)
-      achievement = insert(:achievement, key: "test_key", threshold_value: 10)
+      _achievement = insert(:achievement, key: "test_key", threshold_value: 10)
 
       assert {:ok, user_achievement} = Achievements.create_or_update_user_achievement(user.id, "test_key", 5)
       assert user_achievement.progress_value == 5
@@ -277,7 +277,7 @@ defmodule Neptuner.AchievementsTest do
 
     test "creates completed user achievement when progress meets threshold" do
       user = insert(:user)
-      achievement = insert(:achievement, key: "test_key", threshold_value: 10)
+      _achievement = insert(:achievement, key: "test_key", threshold_value: 10)
 
       assert {:ok, user_achievement} = Achievements.create_or_update_user_achievement(user.id, "test_key", 15)
       assert user_achievement.progress_value == 15
@@ -286,7 +286,7 @@ defmodule Neptuner.AchievementsTest do
 
     test "creates completed user achievement when no threshold set" do
       user = insert(:user)
-      achievement = insert(:achievement, key: "test_key", threshold_value: nil)
+      _achievement = insert(:achievement, key: "test_key", threshold_value: nil)
 
       assert {:ok, user_achievement} = Achievements.create_or_update_user_achievement(user.id, "test_key", 1)
       assert user_achievement.progress_value == 1

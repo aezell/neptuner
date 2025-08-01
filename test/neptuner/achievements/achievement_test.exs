@@ -86,7 +86,7 @@ defmodule Neptuner.Achievements.AchievementTest do
     end
 
     test "validates unique key constraint" do
-      achievement = insert(:achievement, key: "unique_key")
+      _achievement = insert(:achievement, key: "unique_key")
       
       attrs = %{
         key: "unique_key",

@@ -7,7 +7,6 @@ defmodule NeptunerWeb.UserAuthTest do
   alias NeptunerWeb.UserAuth
 
   import Neptuner.AccountsFixtures
-  import Neptuner.Factory
 
   @remember_me_cookie "_neptuner_web_user_remember_me"
   @remember_me_cookie_max_age 60 * 60 * 24 * 14
