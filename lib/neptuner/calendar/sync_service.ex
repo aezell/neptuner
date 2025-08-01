@@ -65,7 +65,7 @@ defmodule Neptuner.Calendar.SyncService do
 
   # Mock data generators for demonstration
   defp generate_mock_google_meetings do
-    base_time = DateTime.utc_now() |> DateTime.add(-7, :day)
+    base_time = DateTime.utc_now() |> DateTime.add(-7, :day) |> DateTime.truncate(:second)
 
     [
       %{
@@ -73,41 +73,41 @@ defmodule Neptuner.Calendar.SyncService do
         title: "Daily Standup - Engineering",
         duration_minutes: 30,
         attendees: ["user@company.com", "dev1@company.com", "dev2@company.com"],
-        start_time: DateTime.add(base_time, 1, :day)
+        start_time: DateTime.add(base_time, 1, :day) |> DateTime.truncate(:second)
       },
       %{
         external_id: "google_allhands_#{:rand.uniform(1000)}",
         title: "All Hands - Q4 Planning",
         duration_minutes: 60,
         attendees: Enum.map(1..25, fn i -> "employee#{i}@company.com" end),
-        start_time: DateTime.add(base_time, 2, :day)
+        start_time: DateTime.add(base_time, 2, :day) |> DateTime.truncate(:second)
       },
       %{
         external_id: "google_1on1_#{:rand.uniform(1000)}",
         title: "1:1 with Manager",
         duration_minutes: 30,
         attendees: ["user@company.com", "manager@company.com"],
-        start_time: DateTime.add(base_time, 3, :day)
+        start_time: DateTime.add(base_time, 3, :day) |> DateTime.truncate(:second)
       },
       %{
         external_id: "google_brainstorm_#{:rand.uniform(1000)}",
         title: "Product Brainstorming Session",
         duration_minutes: 90,
         attendees: ["user@company.com", "product@company.com", "design@company.com"],
-        start_time: DateTime.add(base_time, 4, :day)
+        start_time: DateTime.add(base_time, 4, :day) |> DateTime.truncate(:second)
       },
       %{
         external_id: "google_status_#{:rand.uniform(1000)}",
         title: "Weekly Status Update Meeting",
         duration_minutes: 45,
         attendees: Enum.map(1..8, fn i -> "team#{i}@company.com" end),
-        start_time: DateTime.add(base_time, 5, :day)
+        start_time: DateTime.add(base_time, 5, :day) |> DateTime.truncate(:second)
       }
     ]
   end
 
   defp generate_mock_microsoft_meetings do
-    base_time = DateTime.utc_now() |> DateTime.add(-5, :day)
+    base_time = DateTime.utc_now() |> DateTime.add(-5, :day) |> DateTime.truncate(:second)
 
     [
       %{
@@ -115,21 +115,21 @@ defmodule Neptuner.Calendar.SyncService do
         title: "Cross-team Sync Meeting",
         duration_minutes: 60,
         attendees: Enum.map(1..6, fn i -> "member#{i}@company.com" end),
-        start_time: DateTime.add(base_time, 1, :day)
+        start_time: DateTime.add(base_time, 1, :day) |> DateTime.truncate(:second)
       },
       %{
         external_id: "outlook_review_#{:rand.uniform(1000)}",
         title: "Quarterly Review Meeting",
         duration_minutes: 120,
         attendees: ["user@company.com", "director@company.com", "hr@company.com"],
-        start_time: DateTime.add(base_time, 2, :day)
+        start_time: DateTime.add(base_time, 2, :day) |> DateTime.truncate(:second)
       },
       %{
         external_id: "outlook_planning_#{:rand.uniform(1000)}",
         title: "Sprint Planning Session",
         duration_minutes: 90,
         attendees: Enum.map(1..5, fn i -> "dev#{i}@company.com" end),
-        start_time: DateTime.add(base_time, 3, :day)
+        start_time: DateTime.add(base_time, 3, :day) |> DateTime.truncate(:second)
       }
     ]
   end

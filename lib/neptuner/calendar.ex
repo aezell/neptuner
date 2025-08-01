@@ -43,7 +43,7 @@ defmodule Neptuner.Calendar do
     |> Meeting.changeset(attrs)
     |> Ecto.Changeset.put_change(:user_id, user_id)
     |> Ecto.Changeset.put_change(:service_connection_id, service_connection_id)
-    |> Ecto.Changeset.put_change(:synced_at, DateTime.utc_now())
+    |> Ecto.Changeset.put_change(:synced_at, DateTime.utc_now() |> DateTime.truncate(:second))
     |> Repo.insert()
   end
 
@@ -77,7 +77,7 @@ defmodule Neptuner.Calendar do
     case get_meeting_by_external_id(user_id, external_id) do
       nil ->
         # Create new meeting
-        attrs_with_external_id = Map.put(attrs, :external_id, external_id)
+        attrs_with_external_id = Map.put(attrs, :external_calendar_id, external_id)
         create_meeting(user_id, service_connection_id, attrs_with_external_id)
 
       meeting ->
@@ -91,7 +91,7 @@ defmodule Neptuner.Calendar do
   """
   def get_meeting_by_external_id(user_id, external_id) do
     Meeting
-    |> where([m], m.user_id == ^user_id and m.external_id == ^external_id)
+    |> where([m], m.user_id == ^user_id and m.external_calendar_id == ^external_id)
     |> Repo.one()
   end
 
@@ -127,7 +127,7 @@ defmodule Neptuner.Calendar do
       total_meetings: total_meetings,
       could_have_been_email_count: could_have_been_email,
       could_have_been_email_percentage: Meeting.could_have_been_email_percentage(meetings),
-      total_hours_in_meetings: Float.round(total_duration / 60, 1),
+      total_hours_in_meetings: (total_duration / 60) |> Float.round(1),
       average_productivity_score:
         if(average_productivity, do: Float.round(average_productivity, 1)),
       rated_meetings: length(rated_meetings),
@@ -149,7 +149,7 @@ defmodule Neptuner.Calendar do
 
     %{
       week_meetings: length(meetings),
-      week_hours: Float.round(Enum.sum(Enum.map(meetings, &(&1.duration_minutes || 0))) / 60, 1),
+      week_hours: (Enum.sum(Enum.map(meetings, &(&1.duration_minutes || 0))) / 60) |> Float.round(1),
       week_could_have_been_email: Meeting.could_have_been_email_percentage(meetings),
       week_attendees: Enum.sum(Enum.map(meetings, & &1.attendee_count)),
       collective_human_hours_lost: calculate_collective_hours_lost(meetings)
@@ -164,6 +164,7 @@ defmodule Neptuner.Calendar do
       duration_hours * meeting.attendee_count
     end)
     |> Enum.sum()
+    |> then(&(if &1 == 0, do: 0.0, else: &1))
     |> Float.round(1)
   end
 
