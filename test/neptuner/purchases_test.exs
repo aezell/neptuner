@@ -1,9 +1,9 @@
 defmodule Neptuner.PurchasesTest do
   use Neptuner.DataCase
   alias Neptuner.Purchases
-  import Neptuner.Factory
 
-  describe "purchases", @tag :skip do
+  describe "purchases" do
+    @tag :skip
     test "create_or_update_purchase_from_order/1 creates a new purchase" do
       order_data = build(:purchase_order_data)
 
@@ -18,6 +18,7 @@ defmodule Neptuner.PurchasesTest do
       assert purchase.variant_name == order_data["first_order_item"]["variant_name"]
     end
 
+    @tag :skip
     test "create_or_update_purchase_from_order/1 updates existing purchase" do
       order_data = build(:purchase_order_data)
 
@@ -43,6 +44,7 @@ defmodule Neptuner.PurchasesTest do
       assert updated_purchase.refunded_amount == order_data["total"]
     end
 
+    @tag :skip
     test "get_purchase_by_lemonsqueezy_order_id/1 finds purchase by order ID" do
       order_data = build(:purchase_order_data)
       {:ok, purchase} = Purchases.create_or_update_purchase_from_order(order_data)
@@ -51,6 +53,7 @@ defmodule Neptuner.PurchasesTest do
       assert found_purchase.id == purchase.id
     end
 
+    @tag :skip
     test "get_purchase_by_order_identifier/1 finds purchase by identifier" do
       order_data = build(:purchase_order_data)
       {:ok, purchase} = Purchases.create_or_update_purchase_from_order(order_data)
