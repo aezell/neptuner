@@ -213,7 +213,15 @@ defmodule Neptuner.Factory do
       title: sequence(:achievement_title, &"Achievement #{&1}"),
       description: Faker.Lorem.sentence(5..10),
       ironic_description: Faker.Lorem.sentence(5..10),
-      category: Enum.random(["tasks", "habits", "meetings", "emails", "connections", "productivity_theater"]),
+      category:
+        Enum.random([
+          "tasks",
+          "habits",
+          "meetings",
+          "emails",
+          "connections",
+          "productivity_theater"
+        ]),
       icon: "hero-trophy",
       color: Enum.random(["red", "yellow", "green", "blue", "purple"]),
       threshold_value: Faker.random_between(1, 100),
@@ -234,7 +242,7 @@ defmodule Neptuner.Factory do
 
   # Achievement category variants
   def task_achievement_factory do
-    build(:achievement, 
+    build(:achievement,
       category: "tasks",
       key: "task_achievement",
       title: "Task Master",
@@ -244,7 +252,7 @@ defmodule Neptuner.Factory do
 
   def habit_achievement_factory do
     build(:achievement,
-      category: "habits", 
+      category: "habits",
       key: "habit_achievement",
       title: "Habit Tracker",
       description: "Track habits consistently"
@@ -254,7 +262,7 @@ defmodule Neptuner.Factory do
   def meeting_achievement_factory do
     build(:achievement,
       category: "meetings",
-      key: "meeting_achievement", 
+      key: "meeting_achievement",
       title: "Meeting Survivor",
       description: "Survive another meeting that could have been an email"
     )
@@ -264,7 +272,7 @@ defmodule Neptuner.Factory do
     build(:achievement,
       category: "emails",
       key: "email_achievement",
-      title: "Email Warrior", 
+      title: "Email Warrior",
       description: "Process emails efficiently"
     )
   end
@@ -290,7 +298,7 @@ defmodule Neptuner.Factory do
   # UserAchievement variants
   def completed_user_achievement_factory do
     achievement = build(:achievement, threshold_value: 10)
-    
+
     %UserAchievement{
       progress_value: 15,
       completed_at: DateTime.utc_now() |> DateTime.truncate(:second),
@@ -303,7 +311,7 @@ defmodule Neptuner.Factory do
   def notified_user_achievement_factory do
     completed_at = DateTime.utc_now() |> DateTime.add(-1, :day) |> DateTime.truncate(:second)
     notified_at = DateTime.utc_now() |> DateTime.truncate(:second)
-    
+
     build(:completed_user_achievement,
       completed_at: completed_at,
       notified_at: notified_at
@@ -312,7 +320,7 @@ defmodule Neptuner.Factory do
 
   def in_progress_user_achievement_factory do
     achievement = build(:achievement, threshold_value: 20)
-    
+
     build(:user_achievement,
       progress_value: 10,
       achievement: achievement
@@ -339,9 +347,10 @@ defmodule Neptuner.Factory do
   end
 
   def meeting_factory do
-    scheduled_time = DateTime.utc_now() 
-                    |> DateTime.add(Faker.random_between(-30, 30), :day)
-                    |> DateTime.truncate(:second)
+    scheduled_time =
+      DateTime.utc_now()
+      |> DateTime.add(Faker.random_between(-30, 30), :day)
+      |> DateTime.truncate(:second)
 
     %Meeting{
       external_calendar_id: sequence(:external_calendar_id, &"ext_cal_#{&1}"),
@@ -350,7 +359,8 @@ defmodule Neptuner.Factory do
       attendee_count: Faker.random_between(2, 10),
       could_have_been_email: Enum.random([true, false]),
       actual_productivity_score: nil,
-      meeting_type: Enum.random([:standup, :all_hands, :one_on_one, :brainstorm, :status_update, :other]),
+      meeting_type:
+        Enum.random([:standup, :all_hands, :one_on_one, :brainstorm, :status_update, :other]),
       scheduled_at: scheduled_time,
       synced_at: DateTime.utc_now() |> DateTime.truncate(:second),
       user: build(:user),
@@ -437,26 +447,29 @@ defmodule Neptuner.Factory do
 
   # Time-based variants
   def past_meeting_factory do
-    past_time = DateTime.utc_now() 
-               |> DateTime.add(-Faker.random_between(1, 30), :day)
-               |> DateTime.truncate(:second)
-    
+    past_time =
+      DateTime.utc_now()
+      |> DateTime.add(-Faker.random_between(1, 30), :day)
+      |> DateTime.truncate(:second)
+
     build(:meeting, scheduled_at: past_time)
   end
 
   def future_meeting_factory do
-    future_time = DateTime.utc_now() 
-                 |> DateTime.add(Faker.random_between(1, 30), :day)
-                 |> DateTime.truncate(:second)
-    
+    future_time =
+      DateTime.utc_now()
+      |> DateTime.add(Faker.random_between(1, 30), :day)
+      |> DateTime.truncate(:second)
+
     build(:meeting, scheduled_at: future_time)
   end
 
   def this_week_meeting_factory do
-    this_week = DateTime.utc_now() 
-               |> DateTime.add(-Faker.random_between(0, 6), :day)
-               |> DateTime.truncate(:second)
-    
+    this_week =
+      DateTime.utc_now()
+      |> DateTime.add(-Faker.random_between(0, 6), :day)
+      |> DateTime.truncate(:second)
+
     build(:meeting, scheduled_at: this_week)
   end
 
@@ -498,7 +511,10 @@ defmodule Neptuner.Factory do
       title: sequence(:google_title, fn i -> "Google Meeting #{i}" end),
       duration_minutes: Faker.random_between(30, 120),
       attendees: Enum.map(1..Faker.random_between(2, 8), fn i -> "attendee#{i}@company.com" end),
-      start_time: DateTime.utc_now() |> DateTime.add(Faker.random_between(-7, 7), :day) |> DateTime.truncate(:second)
+      start_time:
+        DateTime.utc_now()
+        |> DateTime.add(Faker.random_between(-7, 7), :day)
+        |> DateTime.truncate(:second)
     }
   end
 
@@ -507,8 +523,240 @@ defmodule Neptuner.Factory do
       external_id: "outlook_event_#{:rand.uniform(10000)}",
       title: sequence(:microsoft_title, fn i -> "Outlook Meeting #{i}" end),
       duration_minutes: Faker.random_between(30, 120),
-      attendees: Enum.map(1..Faker.random_between(2, 8), fn i -> "participant#{i}@company.com" end),
-      start_time: DateTime.utc_now() |> DateTime.add(Faker.random_between(-7, 7), :day) |> DateTime.truncate(:second)
+      attendees:
+        Enum.map(1..Faker.random_between(2, 8), fn i -> "participant#{i}@company.com" end),
+      start_time:
+        DateTime.utc_now()
+        |> DateTime.add(Faker.random_between(-7, 7), :day)
+        |> DateTime.truncate(:second)
     }
+  end
+
+  # Email summary factories
+  alias Neptuner.Communications.EmailSummary
+
+  def email_summary_factory do
+    received_time =
+      DateTime.utc_now()
+      |> DateTime.add(-Faker.random_between(0, 30), :day)
+      |> DateTime.truncate(:second)
+
+    %EmailSummary{
+      subject: sequence(:email_subject, &"Email Subject #{&1}"),
+      sender_email: sequence(:sender_email, &"sender#{&1}@example.com"),
+      sender_name: sequence(:sender_name, &"Sender Name #{&1}"),
+      body_preview: Faker.Lorem.sentences(2..5) |> Enum.join(" "),
+      received_at: received_time,
+      is_read: Enum.random([true, false]),
+      response_time_hours: Faker.random_between(1, 48),
+      time_spent_minutes: Faker.random_between(5, 30),
+      importance_score: Faker.random_between(1, 10),
+      classification:
+        Enum.random([
+          :urgent_important,
+          :urgent_unimportant,
+          :not_urgent_important,
+          :digital_noise
+        ]),
+
+      # Gmail API specific fields
+      external_id: sequence(:external_id, &"gmail_#{&1}"),
+      from_emails: [sequence(:from_email, &"from#{&1}@example.com")],
+      to_emails: [sequence(:to_email, &"to#{&1}@example.com")],
+      cc_emails: [],
+      from_domain: "example.com",
+      thread_position: Enum.random(["first", "middle", "last"]),
+      is_sent: false,
+      word_count: Faker.random_between(50, 500),
+      has_attachments: Enum.random([true, false]),
+      labels:
+        Enum.take_random(
+          ["inbox", "important", "work", "personal", "spam"],
+          Faker.random_between(0, 3)
+        ),
+      external_thread_id: sequence(:thread_id, &"thread_#{&1}"),
+      synced_at: DateTime.utc_now() |> DateTime.truncate(:second),
+
+      # Advanced analysis fields
+      sentiment_analysis: %{
+        "positive" => :rand.uniform(),
+        "negative" => :rand.uniform(),
+        "neutral" => :rand.uniform()
+      },
+      email_intent: Enum.random(["question", "request", "information", "meeting", "follow_up"]),
+      urgency_analysis: %{
+        "urgency_score" => :rand.uniform(),
+        "urgency_keywords" => ["urgent", "asap", "deadline"]
+      },
+      meeting_potential: %{
+        "score" => :rand.uniform(),
+        "indicators" => ["meeting", "schedule", "calendar"]
+      },
+      action_items: %{
+        "items" => ["Review document", "Send response", "Schedule meeting"],
+        "count" => 3
+      },
+      productivity_impact: %{
+        "impact_score" => :rand.uniform(),
+        "time_saved_minutes" => Faker.random_between(0, 60)
+      },
+      cosmic_insights: %{
+        "wisdom" => "The universe conspires to fill your inbox with digital noise",
+        "enlightenment_level" => Faker.random_between(1, 10)
+      },
+
+      # Email-to-task extraction fields
+      task_potential: :rand.uniform(),
+      suggested_tasks: %{
+        "tasks" => [
+          %{"title" => "Reply to email", "priority" => "medium"},
+          %{"title" => "Review attached document", "priority" => "low"}
+        ]
+      },
+      productivity_theater_score: :rand.uniform(),
+      cosmic_action_wisdom: "Sometimes the best action is enlightened inaction",
+      auto_create_recommended: Enum.random([true, false]),
+      tasks_created_count: Faker.random_between(0, 3),
+      last_task_extraction_at: received_time,
+      user: build(:user)
+    }
+  end
+
+  # Email summary classification variants
+  def urgent_important_email_factory do
+    build(:email_summary,
+      classification: :urgent_important,
+      importance_score: Faker.random_between(8, 10),
+      subject: "URGENT: Production system down",
+      sender_email: "ops@company.com"
+    )
+  end
+
+  def urgent_unimportant_email_factory do
+    build(:email_summary,
+      classification: :urgent_unimportant,
+      importance_score: Faker.random_between(3, 5),
+      subject: "URGENT: Office pizza party today!",
+      sender_email: "social@company.com"
+    )
+  end
+
+  def not_urgent_important_email_factory do
+    build(:email_summary,
+      classification: :not_urgent_important,
+      importance_score: Faker.random_between(6, 8),
+      subject: "Quarterly planning review",
+      sender_email: "planning@company.com"
+    )
+  end
+
+  def digital_noise_email_factory do
+    build(:email_summary,
+      classification: :digital_noise,
+      importance_score: Faker.random_between(1, 3),
+      subject: "Your daily horoscope",
+      sender_email: "noreply@newsletter.com"
+    )
+  end
+
+  # Email analysis variants
+  def high_task_potential_email_factory do
+    build(:email_summary,
+      task_potential: 0.7 + :rand.uniform() * 0.3,
+      auto_create_recommended: true,
+      suggested_tasks: %{
+        "tasks" => [
+          %{"title" => "Complete project review", "priority" => "high"},
+          %{"title" => "Schedule follow-up meeting", "priority" => "medium"},
+          %{"title" => "Update documentation", "priority" => "low"}
+        ]
+      }
+    )
+  end
+
+  def low_task_potential_email_factory do
+    build(:email_summary,
+      task_potential: :rand.uniform() * 0.3,
+      auto_create_recommended: false,
+      suggested_tasks: %{"tasks" => []}
+    )
+  end
+
+  def high_productivity_theater_email_factory do
+    build(:email_summary,
+      productivity_theater_score: 0.8 + :rand.uniform() * 0.2,
+      subject: "FYI: CC'ing everyone on this important update",
+      cosmic_action_wisdom: "The art of appearing busy while accomplishing nothing"
+    )
+  end
+
+  def meeting_potential_email_factory do
+    build(:email_summary,
+      meeting_potential: %{
+        "score" => 0.7 + :rand.uniform() * 0.3,
+        "indicators" => ["meeting", "schedule", "calendar", "availability", "discuss"]
+      },
+      email_intent: "meeting",
+      subject: "Let's schedule a meeting to discuss the meeting"
+    )
+  end
+
+  # Gmail-specific variants
+  def gmail_email_factory do
+    build(:email_summary,
+      external_id: "gmail_#{:rand.uniform(100_000)}",
+      labels: ["inbox", "important", "work"],
+      has_attachments: true,
+      thread_position: "first"
+    )
+  end
+
+  def threaded_email_factory do
+    thread_id = "thread_#{:rand.uniform(10000)}"
+
+    build(:email_summary,
+      external_thread_id: thread_id,
+      thread_position: "middle"
+    )
+  end
+
+  def sent_email_factory do
+    build(:email_summary,
+      is_sent: true,
+      from_emails: ["user@company.com"],
+      to_emails: ["recipient@external.com"],
+      labels: ["sent"]
+    )
+  end
+
+  # Time-based variants
+  def recent_email_factory do
+    recent_time =
+      DateTime.utc_now()
+      |> DateTime.add(-Faker.random_between(0, 2), :day)
+      |> DateTime.truncate(:second)
+
+    build(:email_summary, received_at: recent_time)
+  end
+
+  def old_email_factory do
+    old_time =
+      DateTime.utc_now()
+      |> DateTime.add(-Faker.random_between(30, 90), :day)
+      |> DateTime.truncate(:second)
+
+    build(:email_summary, received_at: old_time)
+  end
+
+  def unread_email_factory do
+    build(:email_summary, is_read: false)
+  end
+
+  def read_email_factory do
+    build(:email_summary,
+      is_read: true,
+      response_time_hours: Faker.random_between(1, 24),
+      time_spent_minutes: Faker.random_between(5, 30)
+    )
   end
 end

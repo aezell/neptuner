@@ -24,7 +24,7 @@ defmodule NeptunerWeb.Layouts do
           </span>
         </a>
       </div>
-      
+
       <div class="flex-none">
         <div class="flex items-center gap-2">
           <!-- Theme toggle with mobile-friendly sizing -->
@@ -32,7 +32,7 @@ defmodule NeptunerWeb.Layouts do
             <.theme_toggle />
           </div>
           
-          <!-- Mobile theme toggle (simplified) -->
+    <!-- Mobile theme toggle (simplified) -->
           <div class="sm:hidden">
             <button
               phx-click={JS.dispatch("phx:set-theme", detail: %{theme: "system"})}
@@ -43,7 +43,7 @@ defmodule NeptunerWeb.Layouts do
             </button>
           </div>
           
-          <!-- Profile dropdown with mobile optimization -->
+    <!-- Profile dropdown with mobile optimization -->
           <div :if={@current_scope}>
             <.profile_dropdown
               current_scope={@current_scope}
@@ -52,12 +52,9 @@ defmodule NeptunerWeb.Layouts do
             />
           </div>
           
-          <!-- Login button for unauthenticated users -->
+    <!-- Login button for unauthenticated users -->
           <div :if={!@current_scope} class="flex items-center gap-2">
-            <.link
-              navigate={~p"/users/log-in"}
-              class="btn btn-primary btn-sm"
-            >
+            <.link navigate={~p"/users/log-in"} class="btn btn-primary btn-sm">
               <span class="hidden sm:inline">Log in</span>
               <span class="sm:hidden">Login</span>
             </.link>
@@ -96,7 +93,7 @@ defmodule NeptunerWeb.Layouts do
             </h5>
           </a>
           
-          <!-- Mobile menu button -->
+    <!-- Mobile menu button -->
           <button
             class="btn btn-ghost btn-square"
             onclick="document.getElementById('mobile-sidebar').classList.toggle('hidden')"
@@ -106,17 +103,14 @@ defmodule NeptunerWeb.Layouts do
           </button>
         </div>
       </div>
-
-      <!-- Mobile sidebar overlay -->
+      
+    <!-- Mobile sidebar overlay -->
       <div
         id="mobile-sidebar"
         class="fixed inset-0 z-50 bg-black bg-opacity-50 lg:hidden hidden"
         onclick="document.getElementById('mobile-sidebar').classList.add('hidden')"
       >
-        <div
-          class="w-80 h-full bg-base-100 shadow-xl"
-          onclick="event.stopPropagation()"
-        >
+        <div class="w-80 h-full bg-base-100 shadow-xl" onclick="event.stopPropagation()">
           <div class="flex flex-col h-full p-4">
             <!-- Mobile sidebar header -->
             <div class="flex items-center justify-between mb-6">
@@ -134,7 +128,7 @@ defmodule NeptunerWeb.Layouts do
               </button>
             </div>
             
-            <!-- Mobile navigation -->
+    <!-- Mobile navigation -->
             <nav class="flex-1">
               <ul class="space-y-2">
                 <li>
@@ -200,7 +194,7 @@ defmodule NeptunerWeb.Layouts do
               </ul>
             </nav>
             
-            <!-- Mobile sidebar footer -->
+    <!-- Mobile sidebar footer -->
             <div class="border-t border-base-300 pt-4 mt-4">
               <div class="flex items-center justify-between">
                 <.theme_toggle />
@@ -213,8 +207,8 @@ defmodule NeptunerWeb.Layouts do
           </div>
         </div>
       </div>
-
-      <!-- Desktop sidebar -->
+      
+    <!-- Desktop sidebar -->
       <div class="hidden lg:flex relative w-full max-w-[20rem] flex-col bg-base-100 border-r border-base-300">
         <div class="flex flex-col h-full p-4">
           <div class="flex items-center gap-3 mb-6">
@@ -225,7 +219,7 @@ defmodule NeptunerWeb.Layouts do
               </h5>
             </a>
           </div>
-          
+
           <nav class="flex-1">
             <ul class="space-y-1">
               <li>
@@ -284,7 +278,7 @@ defmodule NeptunerWeb.Layouts do
               </li>
             </ul>
           </nav>
-          
+
           <div class="border-t border-base-300 pt-4 mt-4">
             <div class="flex items-center justify-between">
               <.theme_toggle />
@@ -296,8 +290,8 @@ defmodule NeptunerWeb.Layouts do
           </div>
         </div>
       </div>
-
-      <!-- Main content area -->
+      
+    <!-- Main content area -->
       <div class="flex-1 overflow-x-hidden">
         <main class="px-3 py-4 sm:px-6 lg:px-8 lg:py-8">
           <div class="mx-auto max-w-7xl space-y-4 sm:space-y-6">

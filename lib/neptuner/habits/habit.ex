@@ -27,7 +27,14 @@ defmodule Neptuner.Habits.Habit do
 
   def changeset(habit, attrs) do
     habit
-    |> cast(attrs, [:name, :description, :habit_type, :frequency, :current_streak, :longest_streak])
+    |> cast(attrs, [
+      :name,
+      :description,
+      :habit_type,
+      :frequency,
+      :current_streak,
+      :longest_streak
+    ])
     |> validate_required([:name])
     |> validate_length(:name, min: 1, max: 255)
     |> validate_length(:description, max: 1000)

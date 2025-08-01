@@ -11,13 +11,19 @@
         </div>
 
         <div class="flex gap-2 sm:gap-3 flex-wrap">
-          <button class="btn btn-outline btn-sm flex-1 sm:flex-none min-h-[44px]" phx-click="toggle_insights">
+          <button
+            class="btn btn-outline btn-sm flex-1 sm:flex-none min-h-[44px]"
+            phx-click="toggle_insights"
+          >
             <span class="text-xs sm:text-sm">
               {if @show_insights, do: "Hide", else: "Show"} Insights
             </span>
           </button>
 
-          <.link patch={~p"/habits/new"} class="btn btn-primary btn-sm flex-1 sm:flex-none min-h-[44px]">
+          <.link
+            patch={~p"/habits/new"}
+            class="btn btn-primary btn-sm flex-1 sm:flex-none min-h-[44px]"
+          >
             <span class="text-xs sm:text-sm">Add Habit</span>
           </.link>
         </div>
@@ -26,27 +32,37 @@
 <!-- Mobile-optimized Statistics Dashboard -->
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 lg:gap-4">
         <div class="bg-white p-3 sm:p-4 rounded-lg shadow border">
-          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">{@stats.total_habits}</div>
+          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
+            {@stats.total_habits}
+          </div>
           <div class="text-xs sm:text-sm text-gray-500">Total Habits</div>
         </div>
 
         <div class="bg-green-50 p-3 sm:p-4 rounded-lg shadow border border-green-200">
-          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-green-700">{@stats.active_streaks}</div>
+          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-green-700">
+            {@stats.active_streaks}
+          </div>
           <div class="text-xs sm:text-sm text-green-600">Active Streaks</div>
         </div>
 
         <div class="bg-blue-50 p-3 sm:p-4 rounded-lg shadow border border-blue-200">
-          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-blue-700">{@stats.total_current_streak}</div>
+          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-blue-700">
+            {@stats.total_current_streak}
+          </div>
           <div class="text-xs sm:text-sm text-blue-600">Combined Days</div>
         </div>
 
         <div class="bg-purple-50 p-3 sm:p-4 rounded-lg shadow border border-purple-200">
-          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-purple-700">{@stats.longest_overall_streak}</div>
+          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-purple-700">
+            {@stats.longest_overall_streak}
+          </div>
           <div class="text-xs sm:text-sm text-purple-600">Longest Streak</div>
         </div>
 
         <div class="bg-yellow-50 p-3 sm:p-4 rounded-lg shadow border border-yellow-200 col-span-2 sm:col-span-1">
-          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-yellow-700">{@stats.self_improvement_theater}</div>
+          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-yellow-700">
+            {@stats.self_improvement_theater}
+          </div>
           <div class="text-xs sm:text-sm text-yellow-600">Theater Habits</div>
         </div>
 

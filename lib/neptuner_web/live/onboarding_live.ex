@@ -58,16 +58,18 @@ defmodule NeptunerWeb.OnboardingLive do
 
   def handle_event("create_first_task", params, socket) do
     user = socket.assigns.user
-    task_params = params
-    |> Map.update("estimated_actual_importance", 1, fn val ->
-      case Integer.parse(to_string(val)) do
-        {int, _} -> int
-        :error -> 1
-      end
-    end)
-    |> Map.update("cosmic_priority", "matters_to_nobody", fn val ->
-      String.to_existing_atom(val)
-    end)
+
+    task_params =
+      params
+      |> Map.update("estimated_actual_importance", 1, fn val ->
+        case Integer.parse(to_string(val)) do
+          {int, _} -> int
+          :error -> 1
+        end
+      end)
+      |> Map.update("cosmic_priority", "matters_to_nobody", fn val ->
+        String.to_existing_atom(val)
+      end)
 
     case Tasks.create_task(user.id, task_params) do
       {:ok, _task} ->

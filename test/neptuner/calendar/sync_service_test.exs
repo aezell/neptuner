@@ -7,10 +7,10 @@ defmodule Neptuner.Calendar.SyncServiceTest do
   describe "sync_user_calendars/1" do
     test "syncs all calendar connections for user" do
       user = insert(:user)
-      
+
       _google_connection = insert(:google_service_connection, user: user)
       _microsoft_connection = insert(:microsoft_service_connection, user: user)
-      
+
       # Create a non-calendar connection (should be ignored)
       insert(:service_connection, user: user, service_type: :email)
 
@@ -28,7 +28,7 @@ defmodule Neptuner.Calendar.SyncServiceTest do
 
     test "handles user with no calendar connections" do
       user = insert(:user)
-      
+
       result = SyncService.sync_user_calendars(user.id)
 
       assert result.connections_synced == 0
@@ -38,10 +38,12 @@ defmodule Neptuner.Calendar.SyncServiceTest do
 
     test "processes only calendar service connections" do
       user = insert(:user)
-      
+
       insert(:service_connection, user: user, service_type: :email, provider: :google)
       insert(:service_connection, user: user, service_type: :tasks, provider: :microsoft)
-      _calendar_connection = insert(:service_connection, user: user, service_type: :calendar, provider: :google)
+
+      _calendar_connection =
+        insert(:service_connection, user: user, service_type: :calendar, provider: :google)
 
       result = SyncService.sync_user_calendars(user.id)
 
@@ -51,20 +53,21 @@ defmodule Neptuner.Calendar.SyncServiceTest do
 
     test "continues processing even if one connection fails" do
       user = insert(:user)
-      
+
       # Create connections where one will fail (unsupported provider)
       insert(:service_connection, user: user, service_type: :calendar, provider: :google)
-      insert(:service_connection, user: user, service_type: :calendar, provider: :apple)  # Unsupported
+      # Unsupported
+      insert(:service_connection, user: user, service_type: :calendar, provider: :apple)
 
       result = SyncService.sync_user_calendars(user.id)
 
       assert result.connections_synced == 2
       assert length(result.sync_results) == 2
-      
+
       # One should succeed, one should fail
       success_count = Enum.count(result.sync_results, &match?({:ok, _}, &1))
       error_count = Enum.count(result.sync_results, &match?({:error, _}, &1))
-      
+
       assert success_count == 1
       assert error_count == 1
     end
@@ -90,7 +93,15 @@ defmodule Neptuner.Calendar.SyncServiceTest do
         assert meeting.service_connection_id == connection.id
         assert meeting.external_calendar_id != nil
         assert meeting.title != nil
-        assert meeting.meeting_type in [:standup, :all_hands, :one_on_one, :brainstorm, :status_update, :other]
+
+        assert meeting.meeting_type in [
+                 :standup,
+                 :all_hands,
+                 :one_on_one,
+                 :brainstorm,
+                 :status_update,
+                 :other
+               ]
       end
     end
 
@@ -116,7 +127,9 @@ defmodule Neptuner.Calendar.SyncServiceTest do
 
     test "returns error for unsupported provider" do
       user = insert(:user)
-      connection = insert(:service_connection, user: user, provider: :apple, service_type: :calendar)
+
+      connection =
+        insert(:service_connection, user: user, provider: :apple, service_type: :calendar)
 
       result = SyncService.sync_calendar_connection(user.id, connection)
 
@@ -163,7 +176,7 @@ defmodule Neptuner.Calendar.SyncServiceTest do
   describe "get_sync_recommendations/1" do
     test "recommends challenging email-worthy meetings" do
       user = insert(:user)
-      
+
       # Create meetings where 70% could have been email
       insert_list(7, :could_have_been_email_meeting, user: user)
       insert_list(3, :productive_meeting, user: user)
@@ -171,12 +184,13 @@ defmodule Neptuner.Calendar.SyncServiceTest do
       recommendations = SyncService.get_sync_recommendations(user.id)
 
       assert recommendations.email_worthiness_status == :email_heavy
+
       assert "Consider challenging meetings that could be handled asynchronously" in recommendations.recommendations
     end
 
     test "recommends time blocking for meeting-heavy users" do
       user = insert(:user)
-      
+
       # Create meetings totaling more than 20 hours this week
       for _i <- 1..25 do
         insert(:this_week_meeting, user: user, duration_minutes: 60)
@@ -185,12 +199,16 @@ defmodule Neptuner.Calendar.SyncServiceTest do
       recommendations = SyncService.get_sync_recommendations(user.id)
 
       assert recommendations.meeting_load_status == :meeting_overload
-      assert Enum.any?(recommendations.recommendations, &String.contains?(&1, "time blocking for deep work"))
+
+      assert Enum.any?(
+               recommendations.recommendations,
+               &String.contains?(&1, "time blocking for deep work")
+             )
     end
 
     test "recommends rating meetings when many are unrated" do
       user = insert(:user)
-      
+
       # Create 15 unrated meetings
       insert_list(15, :unrated_meeting, user: user)
 
@@ -201,27 +219,27 @@ defmodule Neptuner.Calendar.SyncServiceTest do
 
     test "provides appropriate existential insights" do
       user = insert(:user)
-      
+
       # High productivity scenario
       insert_list(3, :meeting, user: user, actual_productivity_score: 9)
 
       recommendations = SyncService.get_sync_recommendations(user.id)
 
-      assert recommendations.existential_insight == 
-        "You've discovered the rare art of productive gatherings. The universe notices."
+      assert recommendations.existential_insight ==
+               "You've discovered the rare art of productive gatherings. The universe notices."
     end
 
     test "calculates collective hours lost insight" do
       user = insert(:user)
-      
+
       # Create meetings with high collective hours lost
-      insert(:could_have_been_email_meeting, 
-        user: user, 
-        duration_minutes: 60, 
+      insert(:could_have_been_email_meeting,
+        user: user,
+        duration_minutes: 60,
         attendee_count: 20,
         scheduled_at: DateTime.utc_now() |> DateTime.add(-1, :day)
       )
-      
+
       insert(:could_have_been_email_meeting,
         user: user,
         duration_minutes: 60,
@@ -232,15 +250,24 @@ defmodule Neptuner.Calendar.SyncServiceTest do
       recommendations = SyncService.get_sync_recommendations(user.id)
 
       assert String.contains?(recommendations.existential_insight, "collective hours were lost")
-      assert String.contains?(recommendations.existential_insight, "contemplate the meaning of existence")
+
+      assert String.contains?(
+               recommendations.existential_insight,
+               "contemplate the meaning of existence"
+             )
     end
 
     test "identifies email theater pattern" do
       user = insert(:user)
-      
+
       # Create meetings where 90% could have been email, with low productivity scores
       insert_list(9, :could_have_been_email_meeting, user: user, actual_productivity_score: 3)
-      insert(:productive_meeting, user: user, could_have_been_email: false, actual_productivity_score: 4)
+
+      insert(:productive_meeting,
+        user: user,
+        could_have_been_email: false,
+        actual_productivity_score: 4
+      )
 
       recommendations = SyncService.get_sync_recommendations(user.id)
 
@@ -250,20 +277,29 @@ defmodule Neptuner.Calendar.SyncServiceTest do
 
     test "provides default existential insight" do
       user = insert(:user)
-      
+
       # Create moderate meeting pattern
-      insert_list(3, :meeting, user: user, could_have_been_email: true, actual_productivity_score: 5)
-      insert_list(3, :meeting, user: user, could_have_been_email: false, actual_productivity_score: 6)
+      insert_list(3, :meeting,
+        user: user,
+        could_have_been_email: true,
+        actual_productivity_score: 5
+      )
+
+      insert_list(3, :meeting,
+        user: user,
+        could_have_been_email: false,
+        actual_productivity_score: 6
+      )
 
       recommendations = SyncService.get_sync_recommendations(user.id)
 
-      assert recommendations.existential_insight == 
-        "Your meeting patterns suggest the eternal human struggle between connection and efficiency. Both have their cosmic place."
+      assert recommendations.existential_insight ==
+               "Your meeting patterns suggest the eternal human struggle between connection and efficiency. Both have their cosmic place."
     end
 
     test "classifies meeting load correctly" do
       user = insert(:user)
-      
+
       # Test different hour ranges
       test_cases = [
         {3, :light_load},
@@ -278,7 +314,9 @@ defmodule Neptuner.Calendar.SyncServiceTest do
         |> Enum.each(&Calendar.delete_meeting/1)
 
         # Create meetings for this test case
-        meeting_count = div(hours * 60, 60)  # 1-hour meetings
+        # 1-hour meetings
+        meeting_count = div(hours * 60, 60)
+
         for _i <- 1..meeting_count do
           insert(:this_week_meeting, user: user, duration_minutes: 60)
         end
@@ -290,11 +328,14 @@ defmodule Neptuner.Calendar.SyncServiceTest do
 
     test "classifies email worthiness correctly" do
       user = insert(:user)
-      
+
       test_cases = [
-        {20, :meeting_efficient},      # 20% could have been email
-        {45, :moderately_efficient},   # 45% could have been email
-        {75, :email_heavy}             # 75% could have been email
+        # 20% could have been email
+        {20, :meeting_efficient},
+        # 45% could have been email
+        {45, :moderately_efficient},
+        # 75% could have been email
+        {75, :email_heavy}
       ]
 
       for {email_percentage, expected_status} <- test_cases do
@@ -317,7 +358,7 @@ defmodule Neptuner.Calendar.SyncServiceTest do
 
     test "handles user with no meetings" do
       user = insert(:user)
-      
+
       recommendations = SyncService.get_sync_recommendations(user.id)
 
       assert recommendations.meeting_load_status == :light_load
@@ -328,22 +369,32 @@ defmodule Neptuner.Calendar.SyncServiceTest do
 
     test "combines multiple recommendations" do
       user = insert(:user)
-      
+
       # Create scenario that triggers multiple recommendations
       # High email percentage + many hours + many unrated
-      
+
       # Create meetings for this week (for hours calculation) with high email percentage
-      insert_list(7, :could_have_been_email_meeting, user: user, duration_minutes: 150, 
-        scheduled_at: DateTime.utc_now() |> DateTime.add(-2, :day))  # High hours + high email%
-      insert_list(3, :productive_meeting, user: user, duration_minutes: 150, could_have_been_email: false,
-        scheduled_at: DateTime.utc_now() |> DateTime.add(-3, :day))
-      
+      insert_list(7, :could_have_been_email_meeting,
+        user: user,
+        duration_minutes: 150,
+        # High hours + high email%
+        scheduled_at: DateTime.utc_now() |> DateTime.add(-2, :day)
+      )
+
+      insert_list(3, :productive_meeting,
+        user: user,
+        duration_minutes: 150,
+        could_have_been_email: false,
+        scheduled_at: DateTime.utc_now() |> DateTime.add(-3, :day)
+      )
+
       # Create unrated meetings
       insert_list(15, :unrated_meeting, user: user)
 
       recommendations = SyncService.get_sync_recommendations(user.id)
 
       assert length(recommendations.recommendations) >= 2
+
       # Email percentage should be 70% (7 out of 10), which is > 60%, so should trigger async recommendation
       # If it's not triggering, the test logic might need adjustment - let's focus on the other recommendations
       assert Enum.any?(recommendations.recommendations, &String.contains?(&1, "time blocking"))
@@ -360,7 +411,9 @@ defmodule Neptuner.Calendar.SyncServiceTest do
       SyncService.sync_calendar_connection(user.id, connection)
       meetings = Calendar.list_meetings(user.id)
 
-      google_meetings = Enum.filter(meetings, &String.starts_with?(&1.external_calendar_id, "google_"))
+      google_meetings =
+        Enum.filter(meetings, &String.starts_with?(&1.external_calendar_id, "google_"))
+
       assert length(google_meetings) > 0
 
       # Verify expected Google meeting types are present
@@ -376,7 +429,9 @@ defmodule Neptuner.Calendar.SyncServiceTest do
       SyncService.sync_calendar_connection(user.id, connection)
       meetings = Calendar.list_meetings(user.id)
 
-      microsoft_meetings = Enum.filter(meetings, &String.starts_with?(&1.external_calendar_id, "outlook_"))
+      microsoft_meetings =
+        Enum.filter(meetings, &String.starts_with?(&1.external_calendar_id, "outlook_"))
+
       assert length(microsoft_meetings) > 0
 
       # Verify expected Microsoft meeting patterns
@@ -425,7 +480,7 @@ defmodule Neptuner.Calendar.SyncServiceTest do
   describe "integration with Connections context" do
     test "only processes calendar service connections" do
       user = insert(:user)
-      
+
       # Mock the Connections context behavior
       _calendar_connection = insert(:service_connection, user: user, service_type: :calendar)
       _email_connection = insert(:service_connection, user: user, service_type: :email)
@@ -433,30 +488,32 @@ defmodule Neptuner.Calendar.SyncServiceTest do
 
       # The service should only find calendar connections
       result = SyncService.sync_user_calendars(user.id)
-      
+
       assert result.connections_synced == 1
     end
 
     test "handles user with disabled sync connections" do
       user = insert(:user)
-      
+
       # Create connection with sync disabled
-      _disabled_connection = insert(:disabled_sync_connection, user: user, service_type: :calendar)
+      _disabled_connection =
+        insert(:disabled_sync_connection, user: user, service_type: :calendar)
 
       # This connection should still be processed (sync_enabled check is not implemented in current version)
       result = SyncService.sync_user_calendars(user.id)
-      
+
       assert result.connections_synced == 1
     end
 
     test "handles expired connections gracefully" do
       user = insert(:user)
-      
-      _expired_connection = insert(:expired_service_connection, user: user, service_type: :calendar)
+
+      _expired_connection =
+        insert(:expired_service_connection, user: user, service_type: :calendar)
 
       # Expired connections are filtered out by the connections context (connection_status != :active)
       result = SyncService.sync_user_calendars(user.id)
-      
+
       assert result.connections_synced == 0
     end
   end

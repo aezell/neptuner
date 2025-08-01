@@ -149,7 +149,8 @@ defmodule Neptuner.Calendar do
 
     %{
       week_meetings: length(meetings),
-      week_hours: (Enum.sum(Enum.map(meetings, &(&1.duration_minutes || 0))) / 60) |> Float.round(1),
+      week_hours:
+        (Enum.sum(Enum.map(meetings, &(&1.duration_minutes || 0))) / 60) |> Float.round(1),
       week_could_have_been_email: Meeting.could_have_been_email_percentage(meetings),
       week_attendees: Enum.sum(Enum.map(meetings, & &1.attendee_count)),
       collective_human_hours_lost: calculate_collective_hours_lost(meetings)
@@ -164,7 +165,7 @@ defmodule Neptuner.Calendar do
       duration_hours * meeting.attendee_count
     end)
     |> Enum.sum()
-    |> then(&(if &1 == 0, do: 0.0, else: &1))
+    |> then(&if &1 == 0, do: 0.0, else: &1)
     |> Float.round(1)
   end
 

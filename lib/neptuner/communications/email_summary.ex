@@ -104,12 +104,17 @@ defmodule Neptuner.Communications.EmailSummary do
     |> validate_length(:sender_email, max: 255)
     |> validate_length(:sender_name, max: 255)
     |> validate_length(:body_preview, max: 1000)
-    |> validate_format(:sender_email, ~r/^[^@,;\s]+@[^@,;\s]+$/, message: "must be a valid email")
+    |> validate_format(:sender_email, ~r/^[^@\s]+@[^@\s]+\.[^@\s]+$/,
+      message: "must be a valid email"
+    )
     |> validate_number(:response_time_hours, greater_than: 0)
     |> validate_number(:time_spent_minutes, greater_than: 0)
     |> validate_number(:importance_score, greater_than_or_equal_to: 1, less_than_or_equal_to: 10)
     |> validate_number(:task_potential, greater_than_or_equal_to: 0.0, less_than_or_equal_to: 1.0)
-    |> validate_number(:productivity_theater_score, greater_than_or_equal_to: 0.0, less_than_or_equal_to: 1.0)
+    |> validate_number(:productivity_theater_score,
+      greater_than_or_equal_to: 0.0,
+      less_than_or_equal_to: 1.0
+    )
     |> validate_number(:tasks_created_count, greater_than_or_equal_to: 0)
   end
 

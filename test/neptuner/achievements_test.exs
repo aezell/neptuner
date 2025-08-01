@@ -62,6 +62,7 @@ defmodule Neptuner.AchievementsTest do
     test "raises error with invalid id" do
       # Generate a valid UUID format for binary_id
       invalid_uuid = Ecto.UUID.generate()
+
       assert_raise Ecto.NoResultsError, fn ->
         Achievements.get_achievement!(invalid_uuid)
       end
@@ -97,7 +98,8 @@ defmodule Neptuner.AchievementsTest do
     end
 
     test "returns error with invalid attributes" do
-      attrs = %{key: "invalid"}  # missing required fields
+      # missing required fields
+      attrs = %{key: "invalid"}
 
       assert {:error, changeset} = Achievements.create_achievement(attrs)
       refute changeset.valid?
@@ -184,40 +186,54 @@ defmodule Neptuner.AchievementsTest do
 
     test "orders by completion date, then category and title" do
       user = insert(:user)
-      
+
       # Create achievements with specific ordering
-      task_achievement = insert(:achievement, category: "tasks", title: "Task Achievement", key: "task_order")
-      habit_achievement = insert(:achievement, category: "habits", title: "Habit Achievement", key: "habit_order")
-      
-      old_completed = insert(:user_achievement,
-        user: user,
-        achievement: task_achievement,
-        completed_at: DateTime.utc_now() |> DateTime.add(-2, :day) |> DateTime.truncate(:second)
-      )
-      recent_completed = insert(:user_achievement,
-        user: user,
-        achievement: habit_achievement, 
-        completed_at: DateTime.utc_now() |> DateTime.add(-1, :day) |> DateTime.truncate(:second)
-      )
-      in_progress_achievement = insert(:achievement, category: "meetings", title: "Meeting Achievement", key: "meeting_order")
-      in_progress = insert(:user_achievement, 
-        user: user, 
-        achievement: in_progress_achievement,
-        completed_at: nil
-      )
+      task_achievement =
+        insert(:achievement, category: "tasks", title: "Task Achievement", key: "task_order")
+
+      habit_achievement =
+        insert(:achievement, category: "habits", title: "Habit Achievement", key: "habit_order")
+
+      old_completed =
+        insert(:user_achievement,
+          user: user,
+          achievement: task_achievement,
+          completed_at: DateTime.utc_now() |> DateTime.add(-2, :day) |> DateTime.truncate(:second)
+        )
+
+      recent_completed =
+        insert(:user_achievement,
+          user: user,
+          achievement: habit_achievement,
+          completed_at: DateTime.utc_now() |> DateTime.add(-1, :day) |> DateTime.truncate(:second)
+        )
+
+      in_progress_achievement =
+        insert(:achievement,
+          category: "meetings",
+          title: "Meeting Achievement",
+          key: "meeting_order"
+        )
+
+      in_progress =
+        insert(:user_achievement,
+          user: user,
+          achievement: in_progress_achievement,
+          completed_at: nil
+        )
 
       achievements = Achievements.list_user_achievements(user.id)
-      
+
       # Verify we have the right number
       assert length(achievements) == 3
-      
+
       # Check ordering: completed achievements first (by completed_at desc), then non-completed
       completed_achievements = Enum.filter(achievements, & &1.completed_at)
       non_completed_achievements = Enum.filter(achievements, &is_nil(&1.completed_at))
-      
+
       assert length(completed_achievements) == 2
       assert length(non_completed_achievements) == 1
-      
+
       # Recent completed should be first among completed
       assert hd(completed_achievements).id == recent_completed.id
       # Old completed should be second among completed  
@@ -270,7 +286,9 @@ defmodule Neptuner.AchievementsTest do
       user = insert(:user)
       _achievement = insert(:achievement, key: "test_key", threshold_value: 10)
 
-      assert {:ok, user_achievement} = Achievements.create_or_update_user_achievement(user.id, "test_key", 5)
+      assert {:ok, user_achievement} =
+               Achievements.create_or_update_user_achievement(user.id, "test_key", 5)
+
       assert user_achievement.progress_value == 5
       assert is_nil(user_achievement.completed_at)
     end
@@ -279,7 +297,9 @@ defmodule Neptuner.AchievementsTest do
       user = insert(:user)
       _achievement = insert(:achievement, key: "test_key", threshold_value: 10)
 
-      assert {:ok, user_achievement} = Achievements.create_or_update_user_achievement(user.id, "test_key", 15)
+      assert {:ok, user_achievement} =
+               Achievements.create_or_update_user_achievement(user.id, "test_key", 15)
+
       assert user_achievement.progress_value == 15
       assert user_achievement.completed_at
     end
@@ -288,7 +308,9 @@ defmodule Neptuner.AchievementsTest do
       user = insert(:user)
       _achievement = insert(:achievement, key: "test_key", threshold_value: nil)
 
-      assert {:ok, user_achievement} = Achievements.create_or_update_user_achievement(user.id, "test_key", 1)
+      assert {:ok, user_achievement} =
+               Achievements.create_or_update_user_achievement(user.id, "test_key", 1)
+
       assert user_achievement.progress_value == 1
       assert user_achievement.completed_at
     end
@@ -296,9 +318,13 @@ defmodule Neptuner.AchievementsTest do
     test "updates existing user achievement progress" do
       user = insert(:user)
       achievement = insert(:achievement, key: "test_key", threshold_value: 10)
-      existing = insert(:user_achievement, user: user, achievement: achievement, progress_value: 5)
 
-      assert {:ok, user_achievement} = Achievements.create_or_update_user_achievement(user.id, "test_key", 8)
+      existing =
+        insert(:user_achievement, user: user, achievement: achievement, progress_value: 5)
+
+      assert {:ok, user_achievement} =
+               Achievements.create_or_update_user_achievement(user.id, "test_key", 8)
+
       assert user_achievement.id == existing.id
       assert user_achievement.progress_value == 8
       assert is_nil(user_achievement.completed_at)
@@ -306,10 +332,19 @@ defmodule Neptuner.AchievementsTest do
 
     test "marks existing user achievement as completed when threshold reached" do
       user = insert(:user)
-      achievement = insert(:achievement, key: "test_key", threshold_value: 10) 
-      existing = insert(:user_achievement, user: user, achievement: achievement, progress_value: 5, completed_at: nil)
+      achievement = insert(:achievement, key: "test_key", threshold_value: 10)
 
-      assert {:ok, user_achievement} = Achievements.create_or_update_user_achievement(user.id, "test_key", 12)
+      existing =
+        insert(:user_achievement,
+          user: user,
+          achievement: achievement,
+          progress_value: 5,
+          completed_at: nil
+        )
+
+      assert {:ok, user_achievement} =
+               Achievements.create_or_update_user_achievement(user.id, "test_key", 12)
+
       assert user_achievement.id == existing.id
       assert user_achievement.progress_value == 12
       assert user_achievement.completed_at
@@ -319,17 +354,21 @@ defmodule Neptuner.AchievementsTest do
       user = insert(:user)
       achievement = insert(:achievement, key: "test_key", threshold_value: 10)
       completed_at = DateTime.utc_now() |> DateTime.add(-1, :day) |> DateTime.truncate(:second)
-      existing = insert(:user_achievement, 
-        user: user, 
-        achievement: achievement, 
-        progress_value: 12,
-        completed_at: completed_at
-      )
 
-      assert {:ok, user_achievement} = Achievements.create_or_update_user_achievement(user.id, "test_key", 15)
+      existing =
+        insert(:user_achievement,
+          user: user,
+          achievement: achievement,
+          progress_value: 12,
+          completed_at: completed_at
+        )
+
+      assert {:ok, user_achievement} =
+               Achievements.create_or_update_user_achievement(user.id, "test_key", 15)
+
       assert user_achievement.id == existing.id
       assert user_achievement.progress_value == 15
-      
+
       # Check that completed_at is preserved (within a reasonable time difference)
       original_completed = existing.completed_at
       updated_completed = user_achievement.completed_at
@@ -338,7 +377,7 @@ defmodule Neptuner.AchievementsTest do
 
     test "raises error when achievement key not found" do
       user = insert(:user)
-      
+
       assert_raise Ecto.NoResultsError, fn ->
         Achievements.create_or_update_user_achievement(user.id, "nonexistent_key", 5)
       end
@@ -349,7 +388,9 @@ defmodule Neptuner.AchievementsTest do
     test "marks user achievement as notified" do
       user = insert(:user)
       achievement = insert(:achievement, key: "test_key")
-      user_achievement = insert(:user_achievement, user: user, achievement: achievement, notified_at: nil)
+
+      user_achievement =
+        insert(:user_achievement, user: user, achievement: achievement, notified_at: nil)
 
       assert {:ok, updated} = Achievements.mark_achievement_notified(user.id, "test_key")
       assert updated.id == user_achievement.id
@@ -366,22 +407,30 @@ defmodule Neptuner.AchievementsTest do
   describe "get_achievement_statistics/1" do
     test "returns correct statistics for user with achievements" do
       user = insert(:user)
-      insert_list(3, :achievement)  # Total achievements
-      
+      # Total achievements
+      insert_list(3, :achievement)
+
       # User has completed 1 achievement
       completed_achievement = insert(:achievement)
       insert(:completed_user_achievement, user: user, achievement: completed_achievement)
-      
+
       # User has 1 in progress achievement
       in_progress_achievement = insert(:achievement)
-      insert(:user_achievement, user: user, achievement: in_progress_achievement, completed_at: nil)
+
+      insert(:user_achievement,
+        user: user,
+        achievement: in_progress_achievement,
+        completed_at: nil
+      )
 
       stats = Achievements.get_achievement_statistics(user.id)
-      
-      assert stats.total_achievements == 5  # 3 + 1 + 1
+
+      # 3 + 1 + 1
+      assert stats.total_achievements == 5
       assert stats.completed == 1
       assert stats.in_progress == 1
-      assert stats.completion_percentage == 20  # 1/5 * 100
+      # 1/5 * 100
+      assert stats.completion_percentage == 20
     end
 
     test "returns zero statistics for user with no achievements" do
@@ -389,7 +438,7 @@ defmodule Neptuner.AchievementsTest do
       insert_list(2, :achievement)
 
       stats = Achievements.get_achievement_statistics(user.id)
-      
+
       assert stats.total_achievements == 2
       assert stats.completed == 0
       assert stats.in_progress == 0
@@ -400,7 +449,7 @@ defmodule Neptuner.AchievementsTest do
       user = insert(:user)
 
       stats = Achievements.get_achievement_statistics(user.id)
-      
+
       assert stats.total_achievements == 0
       assert stats.completed == 0
       assert stats.in_progress == 0
@@ -422,13 +471,13 @@ defmodule Neptuner.AchievementsTest do
         insert(:achievement, key: "email_warrior", threshold_value: 1),
         insert(:achievement, key: "connection_integrator", threshold_value: 1)
       ]
-      
+
       %{achievements: achievements}
     end
 
     test "returns empty list when user has no activity", %{achievements: _achievements} do
       user = insert(:user)
-      
+
       # Since related tables may not exist yet, this will return 0 counts
       # which should result in no completed achievements
       assert {:ok, newly_completed} = Achievements.check_achievements_for_user(user.id)
@@ -438,7 +487,7 @@ defmodule Neptuner.AchievementsTest do
 
     test "handles missing related tables gracefully", %{achievements: _achievements} do
       user = insert(:user)
-      
+
       # This test ensures the function doesn't crash when related tables don't exist
       # The Ecto queries will return 0 counts, which is acceptable behavior
       assert {:ok, newly_completed} = Achievements.check_achievements_for_user(user.id)
@@ -447,19 +496,26 @@ defmodule Neptuner.AchievementsTest do
 
     test "processes all expected achievement keys", %{achievements: achievements} do
       user = insert(:user)
-      
+
       expected_keys = [
-        "task_beginner", "task_digital_rectangle_mover", "task_existential_warrior",
-        "habit_basic_human", "habit_streak_survivor", "meeting_survivor", 
-        "meeting_archaeologist", "email_warrior", "connection_integrator"
+        "task_beginner",
+        "task_digital_rectangle_mover",
+        "task_existential_warrior",
+        "habit_basic_human",
+        "habit_streak_survivor",
+        "meeting_survivor",
+        "meeting_archaeologist",
+        "email_warrior",
+        "connection_integrator"
       ]
-      
+
       # Verify all expected achievements exist
       existing_keys = Enum.map(achievements, & &1.key)
+
       for key <- expected_keys do
         assert key in existing_keys, "Missing achievement with key: #{key}"
       end
-      
+
       # The function should process all keys without error
       assert {:ok, newly_completed} = Achievements.check_achievements_for_user(user.id)
       assert is_list(newly_completed)

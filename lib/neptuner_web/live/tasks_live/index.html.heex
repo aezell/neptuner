@@ -11,13 +11,19 @@
         </div>
 
         <div class="flex gap-2 sm:gap-3 flex-wrap">
-          <button class="btn btn-outline btn-sm flex-1 sm:flex-none min-h-[44px]" phx-click="toggle_reality_check">
+          <button
+            class="btn btn-outline btn-sm flex-1 sm:flex-none min-h-[44px]"
+            phx-click="toggle_reality_check"
+          >
             <span class="text-xs sm:text-sm">
               {if @show_reality_check, do: "Hide", else: "Weekly"} Reality Check
             </span>
           </button>
 
-          <.link patch={~p"/tasks/new"} class="btn btn-primary btn-sm flex-1 sm:flex-none min-h-[44px]">
+          <.link
+            patch={~p"/tasks/new"}
+            class="btn btn-primary btn-sm flex-1 sm:flex-none min-h-[44px]"
+          >
             <span class="text-xs sm:text-sm">Add Task</span>
           </.link>
         </div>
@@ -31,32 +37,44 @@
         </div>
 
         <div class="bg-green-50 p-3 sm:p-4 rounded-lg shadow border border-green-200">
-          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-green-700">{@stats.completed}</div>
+          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-green-700">
+            {@stats.completed}
+          </div>
           <div class="text-xs sm:text-sm text-green-600">Completed</div>
         </div>
 
         <div class="bg-blue-50 p-3 sm:p-4 rounded-lg shadow border border-blue-200">
-          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-blue-700">{@stats.pending}</div>
+          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-blue-700">
+            {@stats.pending}
+          </div>
           <div class="text-xs sm:text-sm text-blue-600">Pending</div>
         </div>
 
         <div class="bg-gray-50 p-3 sm:p-4 rounded-lg shadow border border-gray-200">
-          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-700">{@stats.abandoned_wisely}</div>
+          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-700">
+            {@stats.abandoned_wisely}
+          </div>
           <div class="text-xs sm:text-sm text-gray-600">Wisely Abandoned</div>
         </div>
 
         <div class="bg-red-50 p-3 sm:p-4 rounded-lg shadow border border-red-200">
-          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-red-700">{@stats.matters_10_years}</div>
+          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-red-700">
+            {@stats.matters_10_years}
+          </div>
           <div class="text-xs sm:text-sm text-red-600">10 Year Priority</div>
         </div>
 
         <div class="bg-orange-50 p-3 sm:p-4 rounded-lg shadow border border-orange-200">
-          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-orange-700">{@stats.matters_10_days}</div>
+          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-orange-700">
+            {@stats.matters_10_days}
+          </div>
           <div class="text-xs sm:text-sm text-orange-600">10 Day Priority</div>
         </div>
 
         <div class="bg-gray-50 p-3 sm:p-4 rounded-lg shadow border border-gray-200 col-span-2 sm:col-span-1">
-          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-500">{@stats.matters_to_nobody}</div>
+          <div class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-500">
+            {@stats.matters_to_nobody}
+          </div>
           <div class="text-xs sm:text-sm text-gray-400">Matters to Nobody</div>
         </div>
       </div>
@@ -129,7 +147,9 @@
             >
               <option value="all" selected={@filter_status == "all"}>All Status</option>
               <option value="pending" selected={@filter_status == "pending"}>Pending</option>
-              <option value="completed" selected={@filter_status == "completed"}>Completed</option>
+              <option value="completed" selected={@filter_status == "completed"}>
+                Completed
+              </option>
               <option value="abandoned_wisely" selected={@filter_status == "abandoned_wisely"}>
                 Wisely Abandoned
               </option>
@@ -173,18 +193,20 @@
                 <%= if task.description do %>
                   <p class="text-sm text-gray-600 mb-3 break-words">{task.description}</p>
                 <% end %>
-
-                <!-- Task metadata - responsive layout -->
+                
+<!-- Task metadata - responsive layout -->
                 <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs text-gray-500">
-                  <span class="font-medium">Importance: {task.estimated_actual_importance}/10</span>
+                  <span class="font-medium">
+                    Importance: {task.estimated_actual_importance}/10
+                  </span>
                   <%= if task.completed_at do %>
                     <span>Completed: {Calendar.strftime(task.completed_at, "%m/%d/%Y")}</span>
                   <% end %>
                   <span>Created: {Calendar.strftime(task.inserted_at, "%m/%d/%Y")}</span>
                 </div>
               </div>
-
-              <!-- Action buttons - mobile-optimized -->
+              
+<!-- Action buttons - mobile-optimized -->
               <div class="flex items-center gap-2 sm:ml-4">
                 <%= if task.status == :pending do %>
                   <button

@@ -66,7 +66,8 @@ defmodule Neptuner.Integrations.MicrosoftTasks do
     with {:ok, access_token} <- ensure_valid_token(connection) do
       update_data = %{
         status: if(completed, do: "completed", else: "notStarted"),
-        completedDateTime: if(completed, do: DateTime.utc_now() |> DateTime.to_iso8601(), else: nil)
+        completedDateTime:
+          if(completed, do: DateTime.utc_now() |> DateTime.to_iso8601(), else: nil)
       }
 
       update_microsoft_task(access_token, external_id, update_data)
@@ -178,12 +179,16 @@ defmodule Neptuner.Integrations.MicrosoftTasks do
 
   defp transform_to_neptuner_task(_connection, task) do
     due_date = parse_microsoft_date(task["dueDateTime"])
-    completed_at = if task["status"] == "completed", do: parse_microsoft_date(task["completedDateTime"]), else: nil
-    
+
+    completed_at =
+      if task["status"] == "completed",
+        do: parse_microsoft_date(task["completedDateTime"]),
+        else: nil
+
     # Apply cosmic task analysis
     priority = determine_cosmic_priority(task)
     significance_level = calculate_cosmic_significance(task, due_date)
-    
+
     %{
       external_id: task_to_external_id(task),
       title: task["title"] || "Untitled Cosmic Task",
@@ -210,10 +215,14 @@ defmodule Neptuner.Integrations.MicrosoftTasks do
         content: task.description || "",
         contentType: "text"
       },
-      dueDateTime: if(task.due_date, do: %{
-        dateTime: DateTime.to_iso8601(task.due_date),
-        timeZone: "UTC"
-      }, else: nil),
+      dueDateTime:
+        if(task.due_date,
+          do: %{
+            dateTime: DateTime.to_iso8601(task.due_date),
+            timeZone: "UTC"
+          },
+          else: nil
+        ),
       importance: map_priority_to_importance(task.priority),
       status: if(task.completed, do: "completed", else: "notStarted")
     }
@@ -221,6 +230,7 @@ defmodule Neptuner.Integrations.MicrosoftTasks do
 
   defp create_microsoft_task(access_token, list_id, task_data) do
     url = "#{@microsoft_graph_api_base}/me/todo/lists/#{list_id}/tasks"
+
     headers = [
       {"Authorization", "Bearer #{access_token}"},
       {"Content-Type", "application/json"}
@@ -243,8 +253,9 @@ defmodule Neptuner.Integrations.MicrosoftTasks do
   defp update_microsoft_task(access_token, task_id, task_data) do
     # Extract task ID from external ID if needed
     actual_task_id = String.replace(task_id, "microsoft_tasks_", "")
-    
+
     url = "#{@microsoft_graph_api_base}/me/todo/lists/tasks/#{actual_task_id}"
+
     headers = [
       {"Authorization", "Bearer #{access_token}"},
       {"Content-Type", "application/json"}
@@ -266,9 +277,10 @@ defmodule Neptuner.Integrations.MicrosoftTasks do
 
   defp get_primary_task_list(task_lists) do
     # Find the default task list or use the first one
-    primary = Enum.find(task_lists, fn list ->
-      list["isDefaultList"] == true or list["wellknownListName"] == "defaultList"
-    end) || List.first(task_lists)
+    primary =
+      Enum.find(task_lists, fn list ->
+        list["isDefaultList"] == true or list["wellknownListName"] == "defaultList"
+      end) || List.first(task_lists)
 
     if primary do
       {:ok, primary}
@@ -278,18 +290,21 @@ defmodule Neptuner.Integrations.MicrosoftTasks do
   end
 
   defp parse_microsoft_date(nil), do: nil
+
   defp parse_microsoft_date(%{"dateTime" => date_time}) when is_binary(date_time) do
     case DateTime.from_iso8601(date_time) do
       {:ok, dt, _} -> dt
       _ -> nil
     end
   end
+
   defp parse_microsoft_date(date_time) when is_binary(date_time) do
     case DateTime.from_iso8601(date_time) do
       {:ok, dt, _} -> dt
       _ -> nil
     end
   end
+
   defp parse_microsoft_date(_), do: nil
 
   defp determine_cosmic_priority(task) do
@@ -311,37 +326,48 @@ defmodule Neptuner.Integrations.MicrosoftTasks do
     base_significance = 50
 
     # Due date urgency (the cosmic pressure of time)
-    time_pressure = 
+    time_pressure =
       if due_date do
         days_until_due = DateTime.diff(due_date, DateTime.utc_now(), :day)
+
         cond do
-          days_until_due < 0 -> 25  # Overdue tasks gain cosmic weight
-          days_until_due == 0 -> 20  # Today's tasks are significant
-          days_until_due <= 3 -> 15  # Imminent tasks
-          days_until_due <= 7 -> 10  # This week
-          days_until_due <= 30 -> 5  # This month
-          true -> 0  # Future tasks fade into cosmic background
+          # Overdue tasks gain cosmic weight
+          days_until_due < 0 -> 25
+          # Today's tasks are significant
+          days_until_due == 0 -> 20
+          # Imminent tasks
+          days_until_due <= 3 -> 15
+          # This week
+          days_until_due <= 7 -> 10
+          # This month
+          days_until_due <= 30 -> 5
+          # Future tasks fade into cosmic background
+          true -> 0
         end
       else
-        -10  # Tasks without deadlines lose significance in the void
+        # Tasks without deadlines lose significance in the void
+        -10
       end
 
     # Content-based significance analysis
-    content_weight = cond do
-      String.contains?(title, ["project", "goal", "vision", "strategy"]) -> 20
-      String.contains?(title, ["meeting", "call", "appointment"]) -> 10
-      String.contains?(title, ["email", "respond", "reply"]) -> -5
-      String.contains?(title, ["organize", "clean", "sort"]) -> -10
-      String.length(title) > 100 -> -5  # Verbose tasks often lack focus
-      true -> 0
-    end
+    content_weight =
+      cond do
+        String.contains?(title, ["project", "goal", "vision", "strategy"]) -> 20
+        String.contains?(title, ["meeting", "call", "appointment"]) -> 10
+        String.contains?(title, ["email", "respond", "reply"]) -> -5
+        String.contains?(title, ["organize", "clean", "sort"]) -> -10
+        # Verbose tasks often lack focus
+        String.length(title) > 100 -> -5
+        true -> 0
+      end
 
     # Microsoft importance flag
-    importance_bonus = case task["importance"] do
-      "high" -> 15
-      "low" -> -10
-      _ -> 0
-    end
+    importance_bonus =
+      case task["importance"] do
+        "high" -> 15
+        "low" -> -10
+        _ -> 0
+      end
 
     total_significance = base_significance + time_pressure + content_weight + importance_bonus
     max(0, min(100, total_significance))
@@ -349,13 +375,13 @@ defmodule Neptuner.Integrations.MicrosoftTasks do
 
   defp calculate_procrastination_index(task, due_date) do
     created_at = parse_microsoft_date(task["createdDateTime"])
-    
+
     if created_at && due_date do
       total_time = DateTime.diff(due_date, created_at, :day)
       time_remaining = DateTime.diff(due_date, DateTime.utc_now(), :day)
-      
+
       if total_time > 0 do
-        procrastination_ratio = 1 - (time_remaining / total_time)
+        procrastination_ratio = 1 - time_remaining / total_time
         round(procrastination_ratio * 100)
       else
         0
@@ -378,21 +404,41 @@ defmodule Neptuner.Integrations.MicrosoftTasks do
 
     # Existential analysis based on task content
     weight = 0
-    
+
     # Meaningful work patterns
-    weight = weight + if String.contains?(combined_text, ["purpose", "meaning", "why", "vision", "impact"]), do: 30, else: 0
-    
+    weight =
+      weight +
+        if String.contains?(combined_text, ["purpose", "meaning", "why", "vision", "impact"]),
+          do: 30,
+          else: 0
+
     # Busy work patterns
-    weight = weight - if String.contains?(combined_text, ["status", "update", "sync", "check", "review"]), do: 20, else: 0
-    
+    weight =
+      weight -
+        if String.contains?(combined_text, ["status", "update", "sync", "check", "review"]),
+          do: 20,
+          else: 0
+
     # Creative/growth patterns
-    weight = weight + if String.contains?(combined_text, ["create", "learn", "grow", "improve", "develop"]), do: 20, else: 0
-    
+    weight =
+      weight +
+        if String.contains?(combined_text, ["create", "learn", "grow", "improve", "develop"]),
+          do: 20,
+          else: 0
+
     # Administrative burden
-    weight = weight - if String.contains?(combined_text, ["expense", "receipt", "form", "paperwork"]), do: 15, else: 0
-    
+    weight =
+      weight -
+        if String.contains?(combined_text, ["expense", "receipt", "form", "paperwork"]),
+          do: 15,
+          else: 0
+
     # Personal development
-    weight = weight + if String.contains?(combined_text, ["skill", "course", "book", "practice"]), do: 15, else: 0
+    weight =
+      weight +
+        if String.contains?(combined_text, ["skill", "course", "book", "practice"]),
+          do: 15,
+          else: 0
 
     max(0, min(100, 50 + weight))
   end

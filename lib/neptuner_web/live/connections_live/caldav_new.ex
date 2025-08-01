@@ -124,8 +124,8 @@ defmodule NeptunerWeb.ConnectionsLive.CalDAVNew do
             </.form>
           </div>
         </div>
-
-        <!-- Help Section -->
+        
+    <!-- Help Section -->
         <div class="mt-8 bg-blue-50 rounded-lg p-6">
           <div class="flex">
             <div class="flex-shrink-0">
@@ -135,10 +135,22 @@ defmodule NeptunerWeb.ConnectionsLive.CalDAVNew do
               <h3 class="text-sm font-medium text-blue-800">Connection Tips</h3>
               <div class="mt-2 text-sm text-blue-700">
                 <ul class="list-disc list-inside space-y-1">
-                  <li><strong>iCloud:</strong> Use https://caldav.icloud.com/ and create an app-specific password</li>
-                  <li><strong>Google:</strong> Use OAuth connection instead of CalDAV for better integration</li>
-                  <li><strong>Nextcloud:</strong> Use https://your-nextcloud.com/remote.php/dav/calendars/username/</li>
-                  <li><strong>Self-hosted:</strong> Check your server documentation for the correct CalDAV URL</li>
+                  <li>
+                    <strong>iCloud:</strong>
+                    Use https://caldav.icloud.com/ and create an app-specific password
+                  </li>
+                  <li>
+                    <strong>Google:</strong>
+                    Use OAuth connection instead of CalDAV for better integration
+                  </li>
+                  <li>
+                    <strong>Nextcloud:</strong>
+                    Use https://your-nextcloud.com/remote.php/dav/calendars/username/
+                  </li>
+                  <li>
+                    <strong>Self-hosted:</strong>
+                    Check your server documentation for the correct CalDAV URL
+                  </li>
                 </ul>
               </div>
             </div>
@@ -159,7 +171,9 @@ defmodule NeptunerWeb.ConnectionsLive.CalDAVNew do
     {attrs, types}
     |> Ecto.Changeset.cast(params, Map.keys(types))
     |> Ecto.Changeset.validate_required([:server_url, :username, :password])
-    |> Ecto.Changeset.validate_format(:server_url, ~r/^https?:\/\//, message: "must be a valid URL")
+    |> Ecto.Changeset.validate_format(:server_url, ~r/^https?:\/\//,
+      message: "must be a valid URL"
+    )
     |> Ecto.Changeset.validate_length(:username, min: 1)
     |> Ecto.Changeset.validate_length(:password, min: 1)
   end

@@ -291,7 +291,7 @@ defmodule Neptuner.Communications do
   def get_recent_email_summaries(user_id, days_back \\ 30) do
     start_date = Date.utc_today() |> Date.add(-days_back)
     start_datetime = DateTime.new!(start_date, ~T[00:00:00], "Etc/UTC")
-    
+
     EmailSummary
     |> where([es], es.user_id == ^user_id)
     |> where([es], es.received_at >= ^start_datetime)
@@ -366,5 +366,178 @@ defmodule Neptuner.Communications do
     end)
 
     {:ok, "Generated #{length(sample_emails)} sample emails"}
+  end
+
+  # Additional functions for comprehensive testing
+
+  @doc """
+  Lists all email summaries (admin function).
+  """
+  def list_email_summaries do
+    Repo.all(EmailSummary)
+  end
+
+  @doc """
+  Lists email summaries for a specific user.
+  """
+  def list_email_summaries_for_user(user) do
+    EmailSummary
+    |> where([es], es.user_id == ^user.id)
+    |> order_by([es], desc: es.received_at)
+    |> Repo.all()
+  end
+
+  @doc """
+  Lists email summaries by classification for a user.
+  """
+  def list_email_summaries_by_classification(user, classification) do
+    EmailSummary
+    |> where([es], es.user_id == ^user.id)
+    |> where([es], es.classification == ^classification)
+    |> order_by([es], desc: es.received_at)
+    |> Repo.all()
+  end
+
+  @doc """
+  Counts email summaries by classification for a user.
+  """
+  def count_email_summaries_by_classification(user, classification) do
+    EmailSummary
+    |> where([es], es.user_id == ^user.id)
+    |> where([es], es.classification == ^classification)
+    |> Repo.aggregate(:count)
+  end
+
+  @doc """
+  Lists emails with high task potential above the given threshold.
+  """
+  def list_high_task_potential_emails(user, threshold \\ 0.7) do
+    EmailSummary
+    |> where([es], es.user_id == ^user.id)
+    |> where([es], es.task_potential >= ^threshold)
+    |> order_by([es], desc: es.task_potential)
+    |> Repo.all()
+  end
+
+  @doc """
+  Lists emails recommended for automatic task creation.
+  """
+  def list_auto_create_recommended_emails(user) do
+    EmailSummary
+    |> where([es], es.user_id == ^user.id)
+    |> where([es], es.auto_create_recommended == true)
+    |> order_by([es], desc: es.received_at)
+    |> Repo.all()
+  end
+
+  @doc """
+  Lists emails with high productivity theater scores above the given threshold.
+  """
+  def list_high_productivity_theater_emails(user, threshold \\ 0.7) do
+    EmailSummary
+    |> where([es], es.user_id == ^user.id)
+    |> where([es], es.productivity_theater_score >= ^threshold)
+    |> order_by([es], desc: es.productivity_theater_score)
+    |> Repo.all()
+  end
+
+  @doc """
+  Lists recent email summaries within the specified number of days.
+  """
+  def list_recent_email_summaries(user, days_back) do
+    cutoff_date = DateTime.utc_now() |> DateTime.add(-days_back, :day)
+
+    EmailSummary
+    |> where([es], es.user_id == ^user.id)
+    |> where([es], es.received_at >= ^cutoff_date)
+    |> order_by([es], desc: es.received_at)
+    |> Repo.all()
+  end
+
+  @doc """
+  Lists unread email summaries for a user.
+  """
+  def list_unread_email_summaries(user) do
+    EmailSummary
+    |> where([es], es.user_id == ^user.id)
+    |> where([es], es.is_read == false)
+    |> order_by([es], desc: es.received_at)
+    |> Repo.all()
+  end
+
+  @doc """
+  Calculates average response time for a user's read emails.
+  """
+  def calculate_average_response_time(user) do
+    result =
+      EmailSummary
+      |> where([es], es.user_id == ^user.id)
+      |> where([es], es.is_read == true)
+      |> where([es], not is_nil(es.response_time_hours))
+      |> Repo.aggregate(:avg, :response_time_hours)
+
+    case result do
+      %Decimal{} = decimal -> Decimal.to_float(decimal)
+      nil -> nil
+      float when is_float(float) -> float
+    end
+  end
+
+  @doc """
+  Calculates comprehensive productivity statistics for a user's emails.
+  """
+  def calculate_email_productivity_stats(user) do
+    base_query = EmailSummary |> where([es], es.user_id == ^user.id)
+
+    total_emails = Repo.aggregate(base_query, :count)
+
+    urgent_important_count =
+      base_query
+      |> where([es], es.classification == :urgent_important)
+      |> Repo.aggregate(:count)
+
+    digital_noise_count =
+      base_query
+      |> where([es], es.classification == :digital_noise)
+      |> Repo.aggregate(:count)
+
+    average_importance_score =
+      base_query
+      |> where([es], not is_nil(es.importance_score))
+      |> Repo.aggregate(:avg, :importance_score)
+
+    high_task_potential_count =
+      base_query
+      |> where([es], es.task_potential >= 0.7)
+      |> Repo.aggregate(:count)
+
+    average_task_potential =
+      base_query
+      |> where([es], not is_nil(es.task_potential))
+      |> Repo.aggregate(:avg, :task_potential)
+
+    # Helper function to convert Decimal to Float
+    to_float = fn
+      %Decimal{} = decimal -> Decimal.to_float(decimal)
+      nil -> nil
+      float when is_float(float) -> float
+    end
+
+    %{
+      total_emails: total_emails,
+      urgent_important_count: urgent_important_count,
+      digital_noise_count: digital_noise_count,
+      average_importance_score:
+        case to_float.(average_importance_score) do
+          nil -> nil
+          float -> Float.round(float, 1)
+        end,
+      high_task_potential_count: high_task_potential_count,
+      average_task_potential:
+        case to_float.(average_task_potential) do
+          nil -> nil
+          float -> Float.round(float, 1)
+        end
+    }
   end
 end

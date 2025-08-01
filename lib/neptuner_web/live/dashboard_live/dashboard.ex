@@ -46,7 +46,9 @@ defmodule NeptunerWeb.DashboardLive do
           <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex-1">
               <h3 class="text-base sm:text-lg font-semibold mb-2">Daily Cosmic Perspective</h3>
-              <p class="text-purple-100 text-sm sm:text-base mb-3 sm:mb-4">{@statistics.cosmic_insights.daily_wisdom}</p>
+              <p class="text-purple-100 text-sm sm:text-base mb-3 sm:mb-4">
+                {@statistics.cosmic_insights.daily_wisdom}
+              </p>
               <div class="space-y-1">
                 <div
                   :for={insight <- @statistics.cosmic_insights.insights}
@@ -57,7 +59,9 @@ defmodule NeptunerWeb.DashboardLive do
               </div>
             </div>
             <div class="text-center sm:text-right flex-shrink-0">
-              <div class="text-2xl sm:text-3xl font-bold">{@theater_metrics.meaningless_percentage}%</div>
+              <div class="text-2xl sm:text-3xl font-bold">
+                {@theater_metrics.meaningless_percentage}%
+              </div>
               <div class="text-xs sm:text-sm text-purple-200">Productivity Theater</div>
               <div class="text-xs text-purple-300 mt-1">{@theater_metrics.theater_level}</div>
             </div>
@@ -65,7 +69,10 @@ defmodule NeptunerWeb.DashboardLive do
         </div>
         
     <!-- Mobile-optimized Statistics Overview -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6" data-tour="statistics">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"
+          data-tour="statistics"
+        >
           <.stat_card
             title="Tasks"
             value={@statistics.tasks.total}
@@ -105,7 +112,9 @@ defmodule NeptunerWeb.DashboardLive do
         
     <!-- Mobile-optimized Productivity Theater Metrics -->
         <div class="bg-white rounded-lg shadow border border-gray-200 p-4 sm:p-6">
-          <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Productivity Theater Analysis</h3>
+          <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">
+            Productivity Theater Analysis
+          </h3>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
             <div class="text-center p-3 sm:p-0">
               <div class="text-xl sm:text-2xl font-bold text-red-600">
@@ -127,7 +136,9 @@ defmodule NeptunerWeb.DashboardLive do
             </div>
           </div>
           <div class="mt-3 sm:mt-4 p-3 bg-gray-50 rounded">
-            <p class="text-xs sm:text-sm text-gray-700 italic">{@theater_metrics.cosmic_commentary}</p>
+            <p class="text-xs sm:text-sm text-gray-700 italic">
+              {@theater_metrics.cosmic_commentary}
+            </p>
           </div>
         </div>
         
@@ -327,8 +338,13 @@ defmodule NeptunerWeb.DashboardLive do
           </div>
           
     <!-- Mobile-optimized Quick Navigation -->
-          <div class="bg-white rounded-lg shadow border border-gray-200 p-4 sm:p-6" data-tour="quick-actions">
-            <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Quick Actions</h3>
+          <div
+            class="bg-white rounded-lg shadow border border-gray-200 p-4 sm:p-6"
+            data-tour="quick-actions"
+          >
+            <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">
+              Quick Actions
+            </h3>
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-3">
               <.quick_action_button
                 title="Add Task"

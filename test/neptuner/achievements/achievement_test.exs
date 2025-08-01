@@ -19,7 +19,7 @@ defmodule Neptuner.Achievements.AchievementTest do
     test "changeset with all fields" do
       attrs = %{
         key: "complete_achievement",
-        title: "Complete Achievement", 
+        title: "Complete Achievement",
         description: "A complete test achievement",
         ironic_description: "Another meaningless digital trophy",
         category: "productivity_theater",
@@ -40,7 +40,7 @@ defmodule Neptuner.Achievements.AchievementTest do
     test "requires key field" do
       attrs = %{
         title: "Test Achievement",
-        description: "A test achievement", 
+        description: "A test achievement",
         category: "tasks"
       }
 
@@ -63,7 +63,7 @@ defmodule Neptuner.Achievements.AchievementTest do
 
     test "requires description field" do
       attrs = %{
-        key: "test_achievement", 
+        key: "test_achievement",
         title: "Test Achievement",
         category: "tasks"
       }
@@ -76,7 +76,7 @@ defmodule Neptuner.Achievements.AchievementTest do
     test "requires category field" do
       attrs = %{
         key: "test_achievement",
-        title: "Test Achievement", 
+        title: "Test Achievement",
         description: "A test achievement"
       }
 
@@ -87,7 +87,7 @@ defmodule Neptuner.Achievements.AchievementTest do
 
     test "validates unique key constraint" do
       _achievement = insert(:achievement, key: "unique_key")
-      
+
       attrs = %{
         key: "unique_key",
         title: "Another Achievement",
@@ -97,14 +97,21 @@ defmodule Neptuner.Achievements.AchievementTest do
 
       changeset = Achievement.changeset(%Achievement{}, attrs)
       assert changeset.valid?
-      
+
       {:error, changeset} = Repo.insert(changeset)
       assert "has already been taken" in errors_on(changeset).key
     end
 
     test "validates category inclusion" do
-      valid_categories = ["tasks", "habits", "meetings", "emails", "connections", "productivity_theater"]
-      
+      valid_categories = [
+        "tasks",
+        "habits",
+        "meetings",
+        "emails",
+        "connections",
+        "productivity_theater"
+      ]
+
       for category <- valid_categories do
         attrs = %{
           key: "test_#{category}",
@@ -119,7 +126,7 @@ defmodule Neptuner.Achievements.AchievementTest do
 
       invalid_attrs = %{
         key: "test_invalid",
-        title: "Test Achievement", 
+        title: "Test Achievement",
         description: "A test achievement",
         category: "invalid_category"
       }
@@ -131,12 +138,12 @@ defmodule Neptuner.Achievements.AchievementTest do
 
     test "validates threshold_type inclusion" do
       valid_types = ["count", "streak", "percentage", "hours", "ratio"]
-      
+
       for threshold_type <- valid_types do
         attrs = %{
           key: "test_#{threshold_type}",
           title: "Test Achievement",
-          description: "A test achievement", 
+          description: "A test achievement",
           category: "tasks",
           threshold_type: threshold_type
         }
@@ -149,7 +156,7 @@ defmodule Neptuner.Achievements.AchievementTest do
         key: "test_invalid_type",
         title: "Test Achievement",
         description: "A test achievement",
-        category: "tasks", 
+        category: "tasks",
         threshold_type: "invalid_type"
       }
 
@@ -161,7 +168,7 @@ defmodule Neptuner.Achievements.AchievementTest do
     test "sets default values" do
       achievement = %Achievement{}
       assert achievement.icon == "hero-trophy"
-      assert achievement.color == "yellow" 
+      assert achievement.color == "yellow"
       assert achievement.is_active == true
     end
   end

@@ -94,7 +94,8 @@ defmodule Neptuner.Connections.OAuthProviders do
           external_account_email: attrs.username,
           display_name: server_info.display_name || attrs.username,
           # Store encrypted credentials instead of tokens
-          access_token: encrypt_caldav_credentials(attrs.username, attrs.password, attrs.server_url),
+          access_token:
+            encrypt_caldav_credentials(attrs.username, attrs.password, attrs.server_url),
           refresh_token: nil,
           token_expires_at: nil,
           scopes_granted: ["calendar:read", "calendar:write"],
@@ -446,27 +447,29 @@ defmodule Neptuner.Connections.OAuthProviders do
       # Read the private key
       private_key_path = get_apple_private_key_path()
       private_key = File.read!(private_key_path)
-      
+
       # Create JWT headers
       headers = %{
         "alg" => "ES256",
         "kid" => get_apple_key_id()
       }
-      
+
       # Create JWT payload
       now = System.system_time(:second)
+
       payload = %{
         "iss" => get_apple_team_id(),
         "iat" => now,
-        "exp" => now + 3600,  # 1 hour
+        # 1 hour
+        "exp" => now + 3600,
         "aud" => "https://appleid.apple.com",
         "sub" => get_apple_client_id()
       }
-      
+
       # Sign the JWT
       jwk = JOSE.JWK.from_pem(private_key)
       {_type, jwt} = JOSE.JWT.sign(jwk, headers, payload) |> JOSE.JWS.compact()
-      
+
       {:ok, jwt}
     rescue
       e ->
@@ -475,7 +478,11 @@ defmodule Neptuner.Connections.OAuthProviders do
     end
   end
 
-  defp validate_caldav_credentials(%{username: username, password: password, server_url: server_url}) do
+  defp validate_caldav_credentials(%{
+         username: username,
+         password: password,
+         server_url: server_url
+       }) do
     # Attempt to connect to CalDAV server using PROPFIND request
     headers = [
       {"Authorization", "Basic #{Base.encode64("#{username}:#{password}")}"},
@@ -517,7 +524,7 @@ defmodule Neptuner.Connections.OAuthProviders do
       password: password,
       server_url: server_url
     }
-    
+
     Jason.encode!(credentials) |> Base.encode64()
   end
 
