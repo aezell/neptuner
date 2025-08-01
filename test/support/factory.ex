@@ -153,7 +153,8 @@ defmodule Neptuner.Factory do
   def user_factory do
     %User{
       email: sequence(:email, &"user#{&1}@example.com"),
-      confirmed_at: DateTime.utc_now() |> DateTime.truncate(:second)
+      confirmed_at: DateTime.utc_now() |> DateTime.truncate(:second),
+      onboarding_completed: true
     }
   end
 
