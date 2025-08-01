@@ -33,14 +33,17 @@ defmodule Neptuner.Purchases do
   def create_or_update_purchase_from_order(order_data) do
     attrs = build_purchase_attrs_from_order(order_data)
 
-    case get_purchase_by_lemonsqueezy_order_id(attrs.lemonsqueezy_order_id) do
+    case get_purchase_by_lemonsqueezy_order_id(attrs[:lemonsqueezy_order_id]) do
       nil ->
-        Logger.info("Creating new purchase for LemonSqueezy order #{attrs.lemonsqueezy_order_id}")
+        Logger.info(
+          "Creating new purchase for LemonSqueezy order #{attrs[:lemonsqueezy_order_id]}"
+        )
+
         create_purchase(attrs)
 
       purchase ->
         Logger.info(
-          "Updating existing purchase for LemonSqueezy order #{attrs.lemonsqueezy_order_id}"
+          "Updating existing purchase for LemonSqueezy order #{attrs[:lemonsqueezy_order_id]}"
         )
 
         update_purchase(purchase, attrs)

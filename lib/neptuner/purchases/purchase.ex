@@ -3,7 +3,7 @@ defmodule Neptuner.Purchases.Purchase do
 
   schema "purchases" do
     # LemonSqueezy Order fields
-    field :lemonsqueezy_order_id, :integer
+    field :lemonsqueezy_order_id, :string
     field :lemonsqueezy_customer_id, :integer
     field :order_identifier, :string
     field :order_number, :integer
@@ -43,7 +43,7 @@ defmodule Neptuner.Purchases.Purchase do
     field :receipt_url, :string
     field :customer_portal_url, :string
 
-    belongs_to :user, Neptuner.Accounts.User
+    belongs_to :user, Neptuner.Accounts.User, type: :binary_id
 
     timestamps()
   end
