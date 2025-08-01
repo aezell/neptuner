@@ -5,11 +5,16 @@ defmodule NeptunerWeb.ErrorHTMLTest do
   import Phoenix.Template, only: [render_to_string: 4]
 
   test "renders 404.html" do
-    assert render_to_string(NeptunerWeb.ErrorHTML, "404", "html", []) == "Not Found"
+    assigns = %{flash: %{}, current_scope: nil}
+    html = render_to_string(NeptunerWeb.ErrorHTML, "404", "html", assigns)
+    assert html =~ "404"
+    assert html =~ "LOST IN THE COSMIC VOID"
   end
 
   test "renders 500.html" do
-    assert render_to_string(NeptunerWeb.ErrorHTML, "500", "html", []) ==
-             "Internal Server Error"
+    assigns = %{flash: %{}, current_scope: nil}
+    html = render_to_string(NeptunerWeb.ErrorHTML, "500", "html", assigns)
+    assert html =~ "500"
+    assert html =~ "COSMIC MALFUNCTION DETECTED"
   end
 end

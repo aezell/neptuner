@@ -3,7 +3,7 @@ defmodule Neptuner.Factory do
   alias Neptuner.Purchases.Purchase
 
   def purchase_factory do
-    order_id = Faker.random_between(100_000, 999_999)
+    order_id = to_string(Faker.random_between(100_000, 999_999))
     total_cents = Faker.random_between(500, 50_000)
 
     %Purchase{
@@ -38,7 +38,7 @@ defmodule Neptuner.Factory do
   end
 
   def purchase_order_data_factory do
-    order_id = Faker.random_between(100_000, 999_999)
+    order_id = to_string(Faker.random_between(100_000, 999_999))
     total_cents = Faker.random_between(500, 50_000)
     subtotal = total_cents - Faker.random_between(0, div(total_cents, 10))
     tax = Faker.random_between(0, div(total_cents, 8))
